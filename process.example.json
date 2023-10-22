@@ -1,0 +1,11 @@
+{
+  "name"          : "",
+  "script"        : "",
+  "watch"         : true,
+  "ignore_watch"  : [""],
+  "node_args"     : "",
+  "env"           : {
+    "NODE_OPTIONS": "",
+    "TS_NODE_BASEURL": ""
+  }
+}

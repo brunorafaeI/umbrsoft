@@ -1,0 +1,12 @@
+.vscode
+.idea
+
+node_modules
+build
+dist
+coverage
+tmp
+
+process.json
+.env
+
