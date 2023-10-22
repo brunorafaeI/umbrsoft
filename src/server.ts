@@ -1,7 +1,7 @@
 import { SystemLogger } from '@/common/libs/log4js'
 import { getenv } from '@/common/libs/dotenv'
-// import AppServer from '@/infra/frameworks/fastify/app'
-import AppServer from '@/infra/frameworks/express/app'
+import AppServer from '@/infra/frameworks/fastify/app'
+// import AppServer from '@/infra/frameworks/express/app'
 
 const APP_PORT = getenv('APP_PORT', 8080)
 

@@ -1,10 +1,14 @@
 import { Controller, Get, Post } from '@/common/decorators/route'
+import { UserService } from './user.service'
+import { type users } from '@prisma/client'
 
 @Controller('/users')
 export class UserController {
   @Get('/')
-  public userIndex (_, res): any {
-    return res.status(200).send({ message: 'List of users' })
+  public async userIndex (_, res): Promise<users> {
+    const users = await UserService.findAll()
+
+    return res.status(200).send({ users })
   }
 
   @Post('/')
