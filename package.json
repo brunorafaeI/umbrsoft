@@ -10,7 +10,7 @@
     "typeorm": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:run": "tsx -r tsconfig-paths/register typeorm migration:run -d src/infra/database/typeorm/index.ts",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage"
   },
   "engines": {
     "node": ">=18.17.0"

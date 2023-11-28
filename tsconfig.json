@@ -18,7 +18,6 @@
   "include": ["src"],
   "exclude": [
     "build",
-    "node_modules", 
-    "src/infra/database/prisma"
+    "node_modules"
   ]
 }
