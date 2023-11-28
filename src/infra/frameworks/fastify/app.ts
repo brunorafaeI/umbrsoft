@@ -1,6 +1,6 @@
 import fastify from 'fastify'
 import { onRequest, onError } from '@/infra/frameworks/fastify/middlewares'
-import AppRouter from './routes/route'
+import { AppRouter } from './routes'
 const appFastify = fastify({})
 
 // Routers

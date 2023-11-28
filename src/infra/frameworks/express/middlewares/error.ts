@@ -2,12 +2,12 @@ import type { NextFunction, Request, Response } from 'express'
 import { SystemLogger } from '@/common/libs/log4js'
 
 export const onError = (
-  err: any,
+  error: any,
   req: Request,
   res: Response,
   _: NextFunction
 ): Response => {
-  const { message, statusCode } = err
+  const { message, statusCode } = error
 
   SystemLogger.error(message)
 

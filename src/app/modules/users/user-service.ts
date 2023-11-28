@@ -5,7 +5,7 @@ export abstract class UserService {
   static _userRepository: Prisma.usersDelegate<false> = entityManager.users
 
   public static async findAll (): Promise<any> {
-    return UserService._userRepository.findMany()
+    return await UserService._userRepository.findMany()
   }
 
   public toString (): string {

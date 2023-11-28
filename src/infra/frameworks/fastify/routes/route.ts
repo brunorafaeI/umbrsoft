@@ -9,7 +9,7 @@ import { scandir } from '@/common/helpers/scandir'
 import { SystemLogger } from '@/common/libs/log4js'
 import { KERNEL } from '@/infra/config/kernel'
 
-export default class AppRouter {
+export abstract class AppRouter {
   public static _route: FastifyInstance
   static async bootstrap (
     fastify: FastifyInstance,
