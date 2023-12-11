@@ -1,5 +1,5 @@
 import fastify from 'fastify'
-import { onRequest, onError } from '@/infra/frameworks/fastify/middlewares'
+import { onRequest, onError } from '@/frameworks/fastify/middlewares'
 import { AppRouter } from './routes'
 const appFastify = fastify({})
 

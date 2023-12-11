@@ -1,11 +1,16 @@
-import { entityManager } from '@/infra/databases/prisma'
-import { type Prisma } from '@prisma/client'
+import type { FindManyOptions, Repository } from 'typeorm'
+import { entityManager } from '@/persistences/typeorm'
+import { Users } from '@/persistences/typeorm/models/access/Users'
 
 export abstract class UserService {
-  static _userRepository: Prisma.usersDelegate<false> = entityManager.users
+  static _userRepository: Repository<Users> = entityManager.getRepository(Users)
 
-  public static async findAll (): Promise<any> {
-    return await UserService._userRepository.findMany()
+  static async find (options?: FindManyOptions<Users>): Promise<Users[] | null> {
+    return await UserService._userRepository.find(options)
+  }
+
+  static async save (data: any): Promise<Users | null> {
+    return await UserService._userRepository.save(data)
   }
 
   public toString (): string {

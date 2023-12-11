@@ -1,4 +1,4 @@
-import { KERNEL } from '@/infra/config/kernel'
+import { KERNEL } from '@/config/kernel'
 
 describe('KERNEL', () => {
   afterEach(() => {

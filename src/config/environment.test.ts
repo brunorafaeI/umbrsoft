@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import fs from 'node:fs'
 
 import { getenv } from '@/common/libs/dotenv'
-import { checkEnvFile } from '@/infra/config/environment'
+import { checkEnvFile } from '@/config/environment'
 
 describe('stringUtil', () => {
   it('should not call dotenv.config when the file does not exist', () => {

@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { Router } from 'express'
+import { type FastifyInstance } from 'fastify/'
 
 import {
   ROUTE_METADATA_KEY,
@@ -7,12 +7,17 @@ import {
 } from '@/common/decorators/route'
 import { scandir } from '@/common/helpers/scandir'
 import { SystemLogger } from '@/common/libs/log4js'
-import { KERNEL } from '@/infra/config/kernel'
+import { KERNEL } from '@/config/kernel'
 
-export default class AppRouter {
-  public static _route: Router = Router()
-  static async bootstrap (): Promise<void> {
+export abstract class AppRouter {
+  public static _route: FastifyInstance
+  static async bootstrap (
+    fastify: FastifyInstance,
+    options: Record<string, any>
+  ): Promise<void> {
     const controllersPath = path.resolve(KERNEL.project_dir, 'app', 'modules')
+
+    AppRouter._route = fastify
 
     for await (const file of scandir(controllersPath)) {
       if (file.includes('controller')) {
@@ -43,7 +48,7 @@ export default class AppRouter {
         const { path, method, handler } = route
 
         try {
-          (AppRouter._route as any)[method](path, handler)
+          (AppRouter._route as any)[method](path.replace(/\/$/, ''), handler)
         } catch (error) {
           SystemLogger.error(error.message)
         }

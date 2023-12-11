@@ -1,6 +1,6 @@
 import { type IWriteRepository } from '@/domain/interfaces'
 import { User } from '@/infra/databases/typeorm/entities/User'
-import { entityManager } from '@/infra/databases/typeorm'
+import { entityManager } from '@/databases/typeorm'
 import { type DeepPartial, type Repository } from 'typeorm'
 
 export class UserWriteRepository implements IWriteRepository<User> {
