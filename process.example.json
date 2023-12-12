@@ -1,11 +1,11 @@
 {
-  "name"          : "",
-  "script"        : "",
+  "name"          : "umbrella_backend",
+  "script"        : "build/server.js",
   "watch"         : true,
-  "ignore_watch"  : [""],
-  "node_args"     : "",
+  "ignore_watch"  : ["node_modules", "tmp"],
+  "node_args"     : "-r tsconfig-paths/register",
   "env"           : {
-    "NODE_OPTIONS": "",
-    "TS_NODE_BASEURL": ""
+    "NODE_OPTIONS": "--max_old_space_size=4096",
+    "TS_NODE_BASEURL": "build"
   }
 }

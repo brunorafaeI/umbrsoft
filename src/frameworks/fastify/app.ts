@@ -1,10 +1,11 @@
 import fastify from 'fastify'
 import { onRequest, onError } from '@/frameworks/fastify/middlewares'
 import { AppRouter } from './routes'
+
 const appFastify = fastify({})
 
 // Routers
-void appFastify.register(AppRouter.bootstrap, { prefix: '/api' })
+void appFastify.register(AppRouter.bootstrap)
 
 // Hooks
 appFastify.addHook('onRequest', onRequest)
