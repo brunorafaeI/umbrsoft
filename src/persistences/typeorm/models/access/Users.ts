@@ -25,7 +25,7 @@ export class Users {
   })
     username: string | null
 
-  @Column('character varying', { name: 'password', nullable: true, length: 50 })
+  @Column('text', { name: 'password', nullable: true })
     password: string | null
 
   @Column('jsonb', { name: 'access', nullable: true })

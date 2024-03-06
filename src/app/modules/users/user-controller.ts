@@ -17,12 +17,21 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError(err.message)
+      throw new AppError('Internal Server Error', 500)
     }
   }
 
   @Post('/')
   userCreate (req, res): object {
-    return res.status(200).send({ body: req.body })
+    const { body } = req
+
+    try {
+      return res.status(200).send({
+        user: UserService.save(body as Users)
+      })
+    } catch (err) {
+      AppLogger.error(err.message)
+      throw new AppError('Internal Server Error', 500)
+    }
   }
 }
