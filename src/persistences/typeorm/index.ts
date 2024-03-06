@@ -13,12 +13,12 @@ export const entityManager = new DataSource({
   url: getenv.str('DATABASE_URL'),
   entities: [path.resolve(__dirname, 'models', '**', '*.{ts,js}')],
   migrations: [path.resolve(__dirname, 'migrations', '**', '*.{ts,js}')],
-  synchronize: false,
+  synchronize: !ENV_PROD,
   logging: !ENV_PROD,
   migrationsRun: !ENV_PROD,
   maxQueryExecutionTime: 3000
 })
 
 entityManager.initialize()
-  .then(() => { SystemLogger.info('') })
+  .then(() => { SystemLogger.info('Connected to database') })
   .catch(err => { SystemLogger.error(err) })

@@ -8,7 +8,8 @@
     "start": "node -r tsconfig-paths/register dist/server.js",
     "dev:server": "tsx --watch -r tsconfig-paths/register --inspect=0.0.0.0:9229 ./src/server.ts",
     "typeorm": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:run": "tsx -r tsconfig-paths/register typeorm migration:run -d src/infra/database/typeorm/index.ts",
+    "typeorm:generate": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate ./src/persistences/typeorm/migrations/update-tables -d ./src/persistences/typeorm/index.ts",
+    "typeorm:run": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/persistences/typeorm/index.ts",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },

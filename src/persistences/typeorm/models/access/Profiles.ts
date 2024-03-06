@@ -46,6 +46,9 @@ export class Profiles {
   @Column('text', { name: 'image', nullable: true })
     image: string | null
 
+  @Column('timestamp without time zone', { name: 'brithday', nullable: true })
+    brithday: Date
+
   @Column('enum', {
     name: 'type',
     nullable: true,

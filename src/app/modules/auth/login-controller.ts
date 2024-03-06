@@ -4,7 +4,7 @@ import { type FastifyRequest } from 'fastify'
 
 interface LoginFormRequest extends FastifyRequest {
   body: {
-    credential: Pick<Users, 'email' | 'password'>
+    credential: Pick<Users, 'username' | 'password'>
   }
 }
 
