@@ -7,7 +7,8 @@ import {
   OneToMany
 } from 'typeorm'
 import { Clients } from './Clients'
-import { ParamCountry } from './ParamCountry'
+import { ParamCoordinateCity } from './ParamCoordinateCity'
+import { ParamCoordinateCountry } from './ParamCoordinateCountry'
 import { Etablishments } from './Etablishments'
 
 @Index('coordinates_pkey', ['id'], { unique: true })
@@ -20,34 +21,44 @@ export class Coordinates {
   })
     id: string
 
-  @Column('json', { name: 'phone', nullable: true })
-    phone: object | null
+  @Column('character varying', { name: 'address', nullable: true, length: 120 })
+    address: string | null
 
-  @Column('character varying', { name: 'email', nullable: true, length: 50 })
-    email: string | null
+  @Column('character varying', {
+    name: 'address_sup',
+    nullable: true,
+    length: 120
+  })
+    addressSup: string | null
 
-  @Column('character varying', { name: 'city', nullable: true, length: 50 })
-    city: string | null
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
 
-  @Column('json', { name: 'address', nullable: true })
-    address: object | null
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
-
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
-
-  @OneToMany(() => Clients, (clients) => clients.idCoordinate)
+  @OneToMany(() => Clients, (clients) => clients.coordinate)
     clients: Clients[]
 
-  @ManyToOne(() => ParamCountry, (paramCountry) => paramCountry.coordinates, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  })
-  @JoinColumn([{ name: 'id_country', referencedColumnName: 'id' }])
-    idCountry: ParamCountry
+  @ManyToOne(
+    () => ParamCoordinateCity,
+    (paramCoordinateCity) => paramCoordinateCity.coordinates,
+    { onDelete: 'SET NULL', onUpdate: 'CASCADE' }
+  )
+  @JoinColumn([{ name: 'city_id', referencedColumnName: 'id' }])
+    city: ParamCoordinateCity
 
-  @OneToMany(() => Etablishments, (etablishments) => etablishments.idCoordinate)
+  @ManyToOne(
+    () => ParamCoordinateCountry,
+    (paramCoordinateCountry) => paramCoordinateCountry.coordinates,
+    { onDelete: 'SET NULL', onUpdate: 'CASCADE' }
+  )
+  @JoinColumn([{ name: 'country_id', referencedColumnName: 'id' }])
+    country: ParamCoordinateCountry
+
+  @OneToMany(() => Etablishments, (etablishments) => etablishments.coordinate)
     etablishments: Etablishments[]
 }

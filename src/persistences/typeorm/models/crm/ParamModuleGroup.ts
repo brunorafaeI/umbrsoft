@@ -1,15 +1,18 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { Modules } from './Modules'
 
-@Index('widgets_pkey', ['id'], { unique: true })
-@Entity('widgets', { schema: 'app_crm' })
-export class Widgets {
-  @Column('uuid', {
-    primary: true,
-    name: 'id',
-    default: () => 'gen_random_uuid()'
-  })
-    id: string
+@Index('param_module_group_pkey', ['id'], { unique: true })
+@Entity('param_module_group', { schema: 'app_crm' })
+export class ParamModuleGroup {
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+    id: number
 
   @Column('character varying', { name: 'title', nullable: true, length: 30 })
     title: string | null
@@ -21,9 +24,6 @@ export class Widgets {
   })
     description: string | null
 
-  @Column('enum', { name: 'type', nullable: true, enum: ['STANDARD', 'PRO'] })
-    type: 'STANDARD' | 'PRO' | null
-
   @Column('timestamp without time zone', {
     name: 'created_at',
     default: () => "('now')::date"
@@ -33,7 +33,7 @@ export class Widgets {
   @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
     updatedAt: Date | null
 
-  @ManyToOne(() => Modules, (modules) => modules.widgets, {
+  @ManyToOne(() => Modules, (modules) => modules.paramModuleGroups, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   })

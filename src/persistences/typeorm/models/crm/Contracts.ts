@@ -8,7 +8,6 @@ import {
 } from 'typeorm'
 import { Clients } from './Clients'
 import { Etablishments } from './Etablishments'
-import { ParamTypeContract } from './ParamTypeContract'
 import { RelationContractModule } from './RelationContractModule'
 
 @Index('contracts_pkey', ['id'], { unique: true })
@@ -21,11 +20,21 @@ export class Contracts {
   })
     id: string
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
+  @Column('enum', {
+    name: 'type',
+    nullable: true,
+    enum: ['MONTHLY', 'TRIMESTRAL', 'SEMIANNUAL', 'YEARLY']
+  })
+    type: 'MONTHLY' | 'TRIMESTRAL' | 'SEMIANNUAL' | 'YEARLY' | null
 
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
+
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
 
   @ManyToOne(() => Clients, (clients) => clients.contracts, {
     onDelete: 'CASCADE',
@@ -41,17 +50,9 @@ export class Contracts {
   @JoinColumn([{ name: 'id_etablishment', referencedColumnName: 'id' }])
     idEtablishment: Etablishments
 
-  @ManyToOne(
-    () => ParamTypeContract,
-    (paramTypeContract) => paramTypeContract.contracts,
-    { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
-  )
-  @JoinColumn([{ name: 'id_type', referencedColumnName: 'id' }])
-    idType: ParamTypeContract
-
   @OneToMany(
     () => RelationContractModule,
-    (relationContractModule) => relationContractModule.idContract2
+    (relationContractModule) => relationContractModule.contract
   )
     relationContractModules: RelationContractModule[]
 }

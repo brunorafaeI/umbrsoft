@@ -7,7 +7,6 @@ import {
   OneToMany
 } from 'typeorm'
 import { Coordinates } from './Coordinates'
-import { ParamTypeClient } from './ParamTypeClient'
 import { Contracts } from './Contracts'
 import { Etablishments } from './Etablishments'
 
@@ -31,26 +30,24 @@ export class Clients {
   })
     description: string | null
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
+  @Column('enum', { name: 'type', nullable: true, enum: ['STANDARD', 'PRO'] })
+    type: 'STANDARD' | 'PRO' | null
 
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
+
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
 
   @ManyToOne(() => Coordinates, (coordinates) => coordinates.clients, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn([{ name: 'id_coordinate', referencedColumnName: 'id' }])
-    idCoordinate: Coordinates
-
-  @ManyToOne(
-    () => ParamTypeClient,
-    (paramTypeClient) => paramTypeClient.clients,
-    { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
-  )
-  @JoinColumn([{ name: 'id_type', referencedColumnName: 'id' }])
-    idType: ParamTypeClient
+  @JoinColumn([{ name: 'coordinate_id', referencedColumnName: 'id' }])
+    coordinate: Coordinates
 
   @OneToMany(() => Contracts, (contracts) => contracts.idClient)
     contracts: Contracts[]

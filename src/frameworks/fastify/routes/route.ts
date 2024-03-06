@@ -22,10 +22,10 @@ export abstract class AppRouter {
     for await (const file of scandir(controllersPath)) {
       if (file.includes('controller')) {
         try {
-          const controller = await import(file)
+          const controller: object = await import(file)
 
           if (controller instanceof Object) {
-            const objCTRL =
+            const objCTRL: object =
               'default' in controller
                 ? controller.default
                 : Object.values(controller).find(
@@ -40,11 +40,11 @@ export abstract class AppRouter {
     }
   }
 
-  static register (controller: any): void {
+  static register (controller: object): void {
     if (Reflect.hasMetadata(ROUTE_METADATA_KEY, controller)) {
-      const routes = Reflect.getMetadata(ROUTE_METADATA_KEY, controller)
+      const routes: RouteDefinition[] = Reflect.getMetadata(ROUTE_METADATA_KEY, controller)
 
-      for (const [, route] of Object.entries<RouteDefinition>(routes)) {
+      for (const [, route] of Object.entries(routes)) {
         const { path, method, handler } = route
 
         try {

@@ -7,9 +7,8 @@ import {
   OneToMany
 } from 'typeorm'
 import { Contracts } from './Contracts'
-import { Clients } from './Clients'
 import { Coordinates } from './Coordinates'
-import { ParamTypeEtablishment } from './ParamTypeEtablishment'
+import { Clients } from './Clients'
 
 @Index('etablishments_pkey', ['id'], { unique: true })
 @Entity('etablishments', { schema: 'app_crm' })
@@ -24,34 +23,36 @@ export class Etablishments {
   @Column('character varying', { name: 'title', nullable: true, length: 30 })
     title: string | null
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
+  @Column('enum', {
+    name: 'type',
+    nullable: true,
+    enum: ['RESTAURANT', 'CATERINGT', 'BAR', 'PUB']
+  })
+    type: 'RESTAURANT' | 'CATERINGT' | 'BAR' | 'PUB' | null
 
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
+
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
 
   @OneToMany(() => Contracts, (contracts) => contracts.idEtablishment)
     contracts: Contracts[]
 
+  @ManyToOne(() => Coordinates, (coordinates) => coordinates.etablishments, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  @JoinColumn([{ name: 'coordinate_id', referencedColumnName: 'id' }])
+    coordinate: Coordinates
+
   @ManyToOne(() => Clients, (clients) => clients.etablishments, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   })
   @JoinColumn([{ name: 'id_client', referencedColumnName: 'id' }])
     idClient: Clients
-
-  @ManyToOne(() => Coordinates, (coordinates) => coordinates.etablishments, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  })
-  @JoinColumn([{ name: 'id_coordinate', referencedColumnName: 'id' }])
-    idCoordinate: Coordinates
-
-  @ManyToOne(
-    () => ParamTypeEtablishment,
-    (paramTypeEtablishment) => paramTypeEtablishment.etablishments,
-    { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
-  )
-  @JoinColumn([{ name: 'id_type', referencedColumnName: 'id' }])
-    idType: ParamTypeEtablishment
 }

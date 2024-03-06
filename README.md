@@ -23,7 +23,7 @@ Copy the .env.example file to .env in the root directory of the backend submodul
   ```yml
   NODE_ENV=development
   PORT=4554
-  DATABASE_URL=postgresql://postgres:postgres@umbella_pgsql:5432/umbrella
+  DATABASE_URL=postgresql://umbrsoft:umbrsoft@umbrsoft_pgsql:5432/umbrsoft
   ```
 
 ### process.example.json to to process.json
@@ -32,7 +32,7 @@ Copy the process.example.json file to process.json in the root directory of the 
 
   ```json
   {
-    "name": "umbrella_backend",
+    "name": "umbrsoft_backend",
     "script": "./build/server.js",
     "watch": true,
     "ignore_watch": ["node_modules", "tmp"],
@@ -49,7 +49,7 @@ Copy the process.example.json file to process.json in the root directory of the 
 ## Go to the backend container
   
  ```sh
-  docker exec -it umbrella_backend /bin/sh
+  docker exec -it umbrsoft_backend /bin/sh
   su node
  ```
 
@@ -62,7 +62,7 @@ Copy the process.example.json file to process.json in the root directory of the 
 ## Generate the database schema for typeorm
 
 ```sh
-  npx typeorm-model-generator -h umbrella_pgsql -d umbrella -u umbrella -x umbrella -e postgres -s app_access -o ./src/infra/databases/typeorm/access
+  npx typeorm-model-generator -h umbrsoft_pgsql -d umbrsoft -u umbrsoft -x umbrsoft -e postgres -s app_access -o ./src/persistences/typeorm/models/access
 
-  npx typeorm-model-generator -h umbrella_pgsql -d umbrella -u umbrella -x umbrella -e postgres -s app_crm -o ./src/infra/databases/typeorm/crm
+  npx typeorm-model-generator -h umbrsoft_pgsql -d umbrsoft -u umbrsoft -x umbrsoft -e postgres -s app_crm -o ./src/persistences/typeorm/models/crm
 ```

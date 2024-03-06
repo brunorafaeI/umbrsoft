@@ -2,10 +2,10 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { Contracts } from './Contracts'
 import { Modules } from './Modules'
 
-@Index('relation_contract_module_pkey', ['id'], { unique: true })
-@Index('relation_contract_module_id_module_pk', ['idContract', 'idModule'], {
+@Index('relation_contract_module_module_id_pk', ['contractId', 'moduleId'], {
   unique: true
 })
+@Index('relation_contract_module_pkey', ['id'], { unique: true })
 @Entity('relation_contract_module', { schema: 'app_crm' })
 export class RelationContractModule {
   @Column('uuid', {
@@ -15,30 +15,33 @@ export class RelationContractModule {
   })
     id: string
 
-  @Column('uuid', { name: 'id_contract', unique: true })
-    idContract: string
+  @Column('uuid', { name: 'contract_id', unique: true })
+    contractId: string
 
-  @Column('uuid', { name: 'id_module', unique: true })
-    idModule: string
+  @Column('uuid', { name: 'module_id', unique: true })
+    moduleId: string
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
 
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
 
   @ManyToOne(
     () => Contracts,
     (contracts) => contracts.relationContractModules,
     { onDelete: 'CASCADE', onUpdate: 'CASCADE' }
   )
-  @JoinColumn([{ name: 'id_contract', referencedColumnName: 'id' }])
-    idContract2: Contracts
+  @JoinColumn([{ name: 'contract_id', referencedColumnName: 'id' }])
+    contract: Contracts
 
   @ManyToOne(() => Modules, (modules) => modules.relationContractModules, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn([{ name: 'id_module', referencedColumnName: 'id' }])
-    idModule2: Modules
+  @JoinColumn([{ name: 'module_id', referencedColumnName: 'id' }])
+    module: Modules
 }

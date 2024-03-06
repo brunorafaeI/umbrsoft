@@ -1,6 +1,8 @@
-import { Column, Entity, Index, OneToMany } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import { ParamModuleGroup } from './ParamModuleGroup'
 import { RelationContractModule } from './RelationContractModule'
 import { Widgets } from './Widgets'
+import { Users } from '../access/Users'
 
 @Index('modules_pkey', ['id'], { unique: true })
 @Entity('modules', { schema: 'app_crm' })
@@ -22,21 +24,37 @@ export class Modules {
   })
     description: string | null
 
-  @Column('uuid', { name: 'id_type' })
-    idType: string
+  @ManyToOne(() => Users, (users) => users.modules, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+    user: Users
 
-  @Column('date', { name: 'created_at', default: () => "('now')::date" })
-    createdAt: string
+  @Column('integer', { name: 'status', nullable: true })
+    status: number | null
 
-  @Column('date', { name: 'updated_at', nullable: true })
-    updatedAt: string | null
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    default: () => "('now')::date"
+  })
+    createdAt: Date
+
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
+    updatedAt: Date | null
+
+  @OneToMany(
+    () => ParamModuleGroup,
+    (paramModuleGroup) => paramModuleGroup.module
+  )
+    paramModuleGroups: ParamModuleGroup[]
 
   @OneToMany(
     () => RelationContractModule,
-    (relationContractModule) => relationContractModule.idModule2
+    (relationContractModule) => relationContractModule.module
   )
     relationContractModules: RelationContractModule[]
 
-  @OneToMany(() => Widgets, (widgets) => widgets.idModule)
+  @OneToMany(() => Widgets, (widgets) => widgets.module)
     widgets: Widgets[]
 }
