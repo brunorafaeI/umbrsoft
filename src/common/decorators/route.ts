@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { SystemLogger } from '../libs/log4js'
+import { SystemLogger } from '@/common/libs/log4js'
 
 export enum RouteMethod {
   GET = 'get',
@@ -25,7 +25,7 @@ export const ROUTE_METADATA_KEY = Symbol('route')
  * @return {void}
  */
 export const Route = (path: string, method: RouteMethod) => {
-  return (target: any, _: string, descriptor: PropertyDescriptor) => {
+  return (target: object, _: string, descriptor: PropertyDescriptor) => {
     try {
       const routes = Reflect.getMetadata(ROUTE_METADATA_KEY, target.constructor) ?? []
       const newRoutes: RouteDefinition[] = [
@@ -46,8 +46,8 @@ export const Delete = (path: string): any => Route(path, RouteMethod.DELETE)
 export const Put = (path: string): any => Route(path, RouteMethod.PUT)
 
 export const Controller = (routePrefix: string) => {
-  return (constructor: any) => {
-    const routes = Reflect.getMetadata(ROUTE_METADATA_KEY, constructor) ?? []
+  return (constructor: object) => {
+    const routes: [] = Reflect.getMetadata(ROUTE_METADATA_KEY, constructor) ?? []
     const newRoutes: RouteDefinition[] = []
 
     for (const [, route] of Object.entries<RouteDefinition>(routes)) {

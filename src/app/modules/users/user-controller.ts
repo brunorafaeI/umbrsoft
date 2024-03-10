@@ -1,19 +1,20 @@
-import { Controller, Get, Post } from '@/common/decorators/route'
+import { Controller, Put, Post, Get } from '@/common/decorators/route'
 import { UserService } from './user-service'
-import { type FindManyOptions } from 'typeorm'
 import { AppLogger } from '@/common/libs/log4js'
 import { AppError } from '@/common/helpers/http'
 import { type Users } from '@/persistences/typeorm/models/access/Users'
+import { type FindManyOptions } from 'typeorm'
 
 @Controller('/users')
 export class UserController {
+  @Post('/')
   @Get('/')
   async userIndex (req, res): Promise<Users[]> {
     const { body } = req
 
     try {
       return res.status(200).send({
-        users: await UserService.find({ ...(body as FindManyOptions<Users>) })
+        users: await UserService.find(body as FindManyOptions<Users>)
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -21,13 +22,13 @@ export class UserController {
     }
   }
 
-  @Post('/')
-  userCreate (req, res): object {
+  @Put('/')
+  async userCreate (req, res): Promise<Users> {
     const { body } = req
 
     try {
       return res.status(200).send({
-        user: UserService.save(body as Users)
+        user: await UserService.save(body as Users)
       })
     } catch (err) {
       AppLogger.error(err.message)

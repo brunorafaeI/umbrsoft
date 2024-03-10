@@ -13,7 +13,8 @@
     "rules": {
         "no-useless-constructor": "off",
         "typescript-eslint/prefer-nullish-coalescing": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/unbound-method": "off"
     },
     "ignorePatterns": [
         "vitest.config.ts", 

@@ -22,19 +22,18 @@ export class Profiles {
   })
     id: string
 
-  @Column('character varying', { name: 'name', nullable: true, length: 50 })
-    name: string | null
+  @Column('character varying', { name: 'name', length: 50 })
+    name: string
 
   @Column('character varying', { name: 'phone', nullable: true, length: 50 })
     phone: string | null
 
   @Column('character varying', {
     name: 'email',
-    nullable: true,
     unique: true,
     length: 50
   })
-    email: string | null
+    email: string
 
   @Column('boolean', {
     name: 'email_verified',
