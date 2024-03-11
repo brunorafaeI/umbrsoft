@@ -8,14 +8,11 @@ import crypto from 'node:crypto'
 export abstract class UserService {
   static _userRepository: Repository<Users> = entityManager.getRepository(Users)
 
-  static async find (options?: FindManyOptions<Users>): Promise<Users[] | null> {
-    return await UserService._userRepository.find({
-      ...options,
-      select: ['id', 'username', 'access', 'createdAt', 'updatedAt']
-    })
+  static async find (options?: FindManyOptions<Users>): Promise<Users[]> {
+    return await UserService._userRepository.find(options)
   }
 
-  static async save (data: Partial<Users>): Promise<Users | null> {
+  static async save (data: Partial<Users>): Promise<Users> {
     if (!data.username) {
       throw new AppError('Username is required', 400)
     }

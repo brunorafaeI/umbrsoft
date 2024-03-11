@@ -14,7 +14,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        users: await UserService.find(body as FindManyOptions<Users>)
+        users: await UserService.find(body as FindManyOptions<Partial<Omit<Users, 'password'>>>)
       })
     } catch (err) {
       AppLogger.error(err.message)

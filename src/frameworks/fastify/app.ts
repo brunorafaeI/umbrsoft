@@ -5,7 +5,7 @@ import { AppRouter } from './routes'
 import { SwaggerConfig } from './swagger'
 
 import fastifySwagger from '@fastify/swagger'
-import fatifySwaggerUi from '@fastify/swagger-ui'
+import fastifyApiReference from '@scalar/fastify-api-reference'
 
 const appFastify = fastify({
   ignoreTrailingSlash: true
@@ -21,7 +21,12 @@ void appFastify.register(cors, {
 
 // Swagger
 void appFastify.register(fastifySwagger, SwaggerConfig)
-void appFastify.register(fatifySwaggerUi, { routePrefix: '/docs' })
+void appFastify.register(fastifyApiReference, {
+  routePrefix: '/docs',
+  configuration: {
+    spec: () => appFastify.swagger()
+  }
+})
 
 // Routers
 void appFastify.register(AppRouter.bootstrap)

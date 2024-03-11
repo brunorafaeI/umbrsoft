@@ -4,7 +4,7 @@ import { createGenerator } from 'ts-json-schema-generator'
 
 import fastify from 'fastify'
 import fastifySwagger from '@fastify/swagger'
-import fatifySwaggerUi from '@fastify/swagger-ui'
+import fastifyApiReference from '@scalar/fastify-api-reference'
 
 export interface Person {
   name: string
@@ -45,20 +45,20 @@ void appFastify.register(fastifySwagger, {
   }
 })
 
-void appFastify.register(fatifySwaggerUi, {
-  routePrefix: '/docs',
-  uiConfig: {
-    docExpansion: 'full'
-  },
-  uiHooks: {
-    onRequest (request, reply, next) {
-      next()
-    }
-  },
-  staticCSP: true,
-  transformStaticCSP (header) {
-    return header
-  }
+void appFastify.register(fastifyApiReference, {
+  routePrefix: '/docs'
+  // uiConfig: {
+  //   docExpansion: 'full'
+  // },
+  // uiHooks: {
+  //   onRequest (request, reply, next) {
+  //     next()
+  //   }
+  // },
+  // staticCSP: true,
+  // transformStaticCSP (header) {
+  //   return header
+  // }
 })
 
 appFastify.listen({ port: 3000 }, () => { console.log('Server listening on port 3000') })
