@@ -14,7 +14,7 @@ const appFastify = fastify({
 // Middlewares
 void appFastify.register(cors, {
   origin: [
-    'http://localhost:3000',
+    'http://localhost:3333',
     /\.umbrsoft\.com$/
   ]
 })
