@@ -11,7 +11,6 @@ import { Contacts } from './Contacts'
 import { PersonalInfo } from './PersonalInfo'
 import { Users } from './Users'
 
-@Index('profiles_email_key', ['email'], { unique: true })
 @Index('profiles_pkey', ['id'], { unique: true })
 @Entity('profiles', { schema: 'app_access' })
 export class Profiles {
@@ -30,17 +29,21 @@ export class Profiles {
 
   @Column('character varying', {
     name: 'email',
-    unique: true,
     length: 50
   })
     email: string
 
   @Column('boolean', {
     name: 'email_verified',
-    nullable: true,
     default: () => 'false'
   })
-    emailVerified: boolean | null
+    emailVerified: boolean
+
+  @Column('boolean', {
+    name: 'is_active',
+    default: () => 'true'
+  })
+    isActive: boolean
 
   @Column('text', { name: 'image', nullable: true })
     image: string | null
