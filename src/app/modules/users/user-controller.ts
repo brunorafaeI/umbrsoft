@@ -22,6 +22,25 @@ export class UserController {
     }
   }
 
+  @Post('/:userId')
+  @Get('/:userId')
+  async userFindOne (req, res): Promise<Users[]> {
+    const { body } = req
+    const { userId } = req.params
+
+    try {
+      return res.status(200).send({
+        users: await UserService.find({
+          ...(body as FindManyOptions<Partial<Omit<Users, 'password'>>>),
+          where: { id: userId }
+        })
+      })
+    } catch (err) {
+      AppLogger.error(err.message)
+      throw new AppError('Internal Server Error', 500)
+    }
+  }
+
   @Put('/')
   async userCreate (req, res): Promise<Users> {
     const { body } = req
