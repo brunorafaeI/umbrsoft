@@ -47,7 +47,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        user: await UserService.save(body as Users)
+        user: await UserService.findOrSave(body as Users)
       })
     } catch (err) {
       AppLogger.error(err.message)

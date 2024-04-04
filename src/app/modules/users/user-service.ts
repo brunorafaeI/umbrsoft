@@ -37,7 +37,13 @@ export abstract class UserService {
     return await UserService._userRepository.findOne({ where: { id: newUser.id }, relations: ['profiles'] })
   }
 
-  static async getByUsername (username: string): Promise<Users> {
+  static async findOrSave (data: Partial<Users>): Promise<Users> {
+    const { username } = data
+
+    if (!username) {
+      throw new AppError('Username is required', 400)
+    }
+
     const user = await UserService._userRepository.findOne({
       where: { username },
       relations: ['profiles']
