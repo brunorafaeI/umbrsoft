@@ -25,7 +25,7 @@ export class Users {
   })
     username: string | null
 
-  @Column('text', { name: 'password', nullable: true })
+  @Column('text', { name: 'password', nullable: true, select: false })
     password: string | null
 
   @Column('jsonb', { name: 'access', nullable: true })

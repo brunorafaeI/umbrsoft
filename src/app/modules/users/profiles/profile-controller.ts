@@ -14,7 +14,9 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        profiles: await ProfileService.find({ ...(body as FindManyOptions<Profiles>) })
+        profiles: await ProfileService.find({
+          ...(body as FindManyOptions<Profiles>)
+        })
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -42,13 +44,15 @@ export class ProfileController {
   }
 
   @Put('/')
-  async userCreate (req, res): Promise<Profiles> {
+  async profileCreate (req, res): Promise<Profiles> {
     const { body } = req
     const { userId } = req.params
 
     try {
       return res.status(200).send({
-        profile: await ProfileService.save({ ...body as Profiles, user: userId })
+        profile: await ProfileService.save({
+          ...body as Profiles, user: userId
+        })
       })
     } catch (err) {
       AppLogger.error(err.message)

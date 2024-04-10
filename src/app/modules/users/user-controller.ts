@@ -14,7 +14,9 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        users: await UserService.find(body as FindManyOptions<Partial<Omit<Users, 'password'>>>)
+        users: await UserService.find({
+          ...(body as FindManyOptions<Users>)
+        })
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -31,7 +33,7 @@ export class UserController {
     try {
       return res.status(200).send({
         users: await UserService.find({
-          ...(body as FindManyOptions<Partial<Omit<Users, 'password'>>>),
+          ...(body as FindManyOptions<Users>),
           where: { id: userId }
         })
       })

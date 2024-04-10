@@ -9,12 +9,33 @@ import { type BankingInfo } from '@/persistences/typeorm/models/access/BankingIn
 export class BankingInfoController {
   @Get('/')
   @Post('/')
-  async profileIndex (req, res): Promise<BankingInfo[]> {
+  async backingInfoIndex (req, res): Promise<BankingInfo[]> {
     const { body } = req
 
     try {
       return res.status(200).send({
-        profiles: await BankingInfoService.find({ ...(body as FindManyOptions<BankingInfo>) })
+        profiles: await BankingInfoService.find({
+          ...(body as FindManyOptions<BankingInfo>)
+        })
+      })
+    } catch (err) {
+      AppLogger.error(err.message)
+      throw new AppError('Internal Server Error', 500)
+    }
+  }
+
+  @Get('/:contactId')
+  @Post('/:contactId')
+  async backingInfoFindOne (req, res): Promise<BankingInfo[]> {
+    const { body } = req
+    const { contactId } = req.params
+
+    try {
+      return res.status(200).send({
+        profiles: await BankingInfoService.find({
+          ...(body as FindManyOptions<BankingInfo>),
+          where: { id: contactId }
+        })
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -23,13 +44,15 @@ export class BankingInfoController {
   }
 
   @Put('/')
-  async userCreate (req, res): Promise<BankingInfo> {
+  async backingInfoCreate (req, res): Promise<BankingInfo> {
     const { body } = req
     const { profileId } = req.params
 
     try {
       return res.status(200).send({
-        profile: await BankingInfoService.save({ ...body as BankingInfo, profile: profileId })
+        profile: await BankingInfoService.save({
+          ...body as BankingInfo, profile: profileId
+        })
       })
     } catch (err) {
       AppLogger.error(err.message)
