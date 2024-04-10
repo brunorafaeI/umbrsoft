@@ -19,7 +19,8 @@ export abstract class ProfileService {
       throw new AppError('Email is required', 400)
     }
 
-    return await ProfileService._userRepository.save(data)
+    const profileUpdated = await ProfileService._userRepository.save(data)
+    return await ProfileService._userRepository.findOne({ where: { id: profileUpdated?.id } })
   }
 
   public toString (): string {

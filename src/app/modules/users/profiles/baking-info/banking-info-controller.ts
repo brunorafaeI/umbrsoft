@@ -24,17 +24,17 @@ export class BankingInfoController {
     }
   }
 
-  @Get('/:contactId')
-  @Post('/:contactId')
+  @Get('/:backingInfoId')
+  @Post('/:backingInfoId')
   async backingInfoFindOne (req, res): Promise<BankingInfo[]> {
     const { body } = req
-    const { contactId } = req.params
+    const { backingInfoId } = req.params
 
     try {
       return res.status(200).send({
         profiles: await BankingInfoService.find({
           ...(body as FindManyOptions<BankingInfo>),
-          where: { id: contactId }
+          where: { id: backingInfoId }
         })
       })
     } catch (err) {
