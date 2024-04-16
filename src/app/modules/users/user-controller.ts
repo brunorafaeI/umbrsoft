@@ -31,10 +31,11 @@ export class UserController {
     const { userId } = req.params
 
     try {
+      body.where = { ...body?.where, id: userId }
+
       return res.status(200).send({
         users: await UserService.find({
-          ...(body as FindManyOptions<Users>),
-          where: { id: userId }
+          ...(body as FindManyOptions<Users>)
         })
       })
     } catch (err) {

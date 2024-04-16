@@ -31,10 +31,11 @@ export class BankingInfoController {
     const { backingInfoId } = req.params
 
     try {
+      body.where = { ...body?.where, id: backingInfoId }
+
       return res.status(200).send({
         profiles: await BankingInfoService.find({
-          ...(body as FindManyOptions<BankingInfo>),
-          where: { id: backingInfoId }
+          ...(body as FindManyOptions<BankingInfo>)
         })
       })
     } catch (err) {

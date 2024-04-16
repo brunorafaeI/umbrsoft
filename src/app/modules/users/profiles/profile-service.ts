@@ -20,7 +20,9 @@ export abstract class ProfileService {
     }
 
     const profileUpdated = await ProfileService._userRepository.save(data)
-    return await ProfileService._userRepository.findOne({ where: { id: profileUpdated?.id } })
+    return await ProfileService._userRepository.findOne({
+      where: { id: profileUpdated?.id }
+    })
   }
 
   public toString (): string {

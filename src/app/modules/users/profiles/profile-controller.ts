@@ -31,10 +31,11 @@ export class ProfileController {
     const { profileId } = req.params
 
     try {
+      body.where = { ...body?.where, id: profileId }
+
       return res.status(200).send({
         profiles: await ProfileService.find({
-          ...(body as FindManyOptions<Profiles>),
-          where: { id: profileId }
+          ...(body as FindManyOptions<Profiles>)
         })
       })
     } catch (err) {

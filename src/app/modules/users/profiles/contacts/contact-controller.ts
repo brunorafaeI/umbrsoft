@@ -31,10 +31,11 @@ export class ContactController {
     const { contactId } = req.params
 
     try {
+      body.where = { ...body?.where, id: contactId }
+
       return res.status(200).send({
         profiles: await ContactService.find({
-          ...(body as FindManyOptions<Contacts>),
-          where: { id: contactId }
+          ...(body as FindManyOptions<Contacts>)
         })
       })
     } catch (err) {
