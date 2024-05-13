@@ -54,6 +54,9 @@ export class Profiles {
   @Column('date', { name: 'birthday', nullable: true })
     birthday: Date | null
 
+  @Column('jsonb', { name: 'access', nullable: true })
+    access: object | null
+
   @Column('enum', {
     name: 'type',
     nullable: true,

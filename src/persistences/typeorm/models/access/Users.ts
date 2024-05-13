@@ -25,9 +25,6 @@ export class Users {
   @Column('text', { name: 'password', nullable: true, select: false })
     password: string | null
 
-  @Column('jsonb', { name: 'access', nullable: true })
-    access: object | null
-
   @Column('timestamp without time zone', {
     name: 'created_at',
     default: () => "('now')::date"
