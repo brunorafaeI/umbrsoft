@@ -18,7 +18,7 @@
 // }
 
 export const Body = () => {
-  return (target: any, propertyKey: string, parameterIndex: number) => {
+  return (target: object, propertyKey: string, parameterIndex: number) => {
     const existingBodyParameters: number[] =
       Reflect.getOwnMetadata('body:parameters', target, propertyKey) ?? []
     existingBodyParameters.push(parameterIndex)

@@ -1,4 +1,5 @@
-import { Column, Entity, Index } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
+import { Profiles } from '../access/Profiles'
 
 @Index('event_param_history_pkey', ['id'], { unique: true })
 @Entity('event_param_history', { schema: 'app_crm' })
@@ -20,12 +21,16 @@ export class EventParamHistory {
   @Column('jsonb', { name: 'content', nullable: true })
     content: object | null
 
-  @Column('uuid', { name: 'user_id' })
-    userId: string
-
   @Column('timestamp without time zone', {
     name: 'created_at',
     default: () => "('now')::date"
   })
     createdAt: Date
+
+  @ManyToOne(() => Profiles, (profiles) => profiles.eventParamHistories, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  @JoinColumn([{ name: 'profile_id', referencedColumnName: 'id' }])
+    profile: Profiles
 }

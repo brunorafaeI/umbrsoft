@@ -10,6 +10,9 @@ import { BankingInfo } from './BankingInfo'
 import { Contacts } from './Contacts'
 import { PersonalInfo } from './PersonalInfo'
 import { Users } from './Users'
+import { Modules } from '../crm/Modules'
+import { EventParamHistory } from './EventParamHistory'
+import { EventTableHistory } from './EventTableHistory'
 
 @Index('profiles_pkey', ['id'], { unique: true })
 @Entity('profiles', { schema: 'app_access' })
@@ -82,4 +85,22 @@ export class Profiles {
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
     user: Users
+
+  @OneToMany(
+    () => Modules,
+    (modules) => modules.profile
+  )
+    modules: Modules[]
+
+  @OneToMany(
+    () => EventParamHistory,
+    (eventParamHistory) => eventParamHistory.profile
+  )
+    eventParamHistories: EventParamHistory[]
+
+  @OneToMany(
+    () => EventTableHistory,
+    (eventTableHistory) => eventTableHistory.profile
+  )
+    eventTableHistories: EventTableHistory[]
 }

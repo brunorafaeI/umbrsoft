@@ -2,7 +2,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm
 import { ParamModuleGroup } from './ParamModuleGroup'
 import { RelationContractModule } from './RelationContractModule'
 import { Widgets } from './Widgets'
-import { Users } from '../access/Users'
+import { Profiles } from '../access/Profiles'
 
 @Index('modules_pkey', ['id'], { unique: true })
 @Entity('modules', { schema: 'app_crm' })
@@ -24,12 +24,12 @@ export class Modules {
   })
     description: string | null
 
-  @ManyToOne(() => Users, (users) => users.modules, {
+  @ManyToOne(() => Profiles, (profiles) => profiles.modules, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-    user: Users
+  @JoinColumn([{ name: 'profile_id', referencedColumnName: 'id' }])
+    profile: Profiles
 
   @Column('integer', { name: 'status', nullable: true })
     status: number | null

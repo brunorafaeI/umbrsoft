@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
-import { Users } from './Users'
+import { Profiles } from './Profiles'
 
 @Index('event_param_history_pkey', ['id'], { unique: true })
 @Entity('event_param_history', { schema: 'app_access' })
@@ -27,10 +27,10 @@ export class EventParamHistory {
   })
     createdAt: Date
 
-  @ManyToOne(() => Users, (users) => users.eventParamHistories, {
+  @ManyToOne(() => Profiles, (profiles) => profiles.eventParamHistories, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-    user: Users
+  @JoinColumn([{ name: 'profile_id', referencedColumnName: 'id' }])
+    profile: Profiles
 }

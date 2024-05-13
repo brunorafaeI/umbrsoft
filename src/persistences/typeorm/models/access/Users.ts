@@ -1,10 +1,7 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm'
 import { Accounts } from './Accounts'
-import { EventParamHistory } from './EventParamHistory'
-import { EventTableHistory } from './EventTableHistory'
 import { Profiles } from './Profiles'
 import { Sessions } from './Sessions'
-import { Modules } from '../crm/Modules'
 
 @Index('users_pkey', ['id'], { unique: true })
 @Index('users_username_key', ['username'], { unique: true })
@@ -43,27 +40,9 @@ export class Users {
   @OneToMany(() => Accounts, (accounts) => accounts.user)
     accounts: Accounts[]
 
-  @OneToMany(
-    () => EventParamHistory,
-    (eventParamHistory) => eventParamHistory.user
-  )
-    eventParamHistories: EventParamHistory[]
-
-  @OneToMany(
-    () => EventTableHistory,
-    (eventTableHistory) => eventTableHistory.user
-  )
-    eventTableHistories: EventTableHistory[]
-
   @OneToMany(() => Profiles, (profiles) => profiles.user)
     profiles: Profiles[]
 
   @OneToMany(() => Sessions, (sessions) => sessions.user)
     sessions: Sessions[]
-
-  @OneToMany(
-    () => Modules,
-    (modules) => modules.user
-  )
-    modules: Modules[]
 }
