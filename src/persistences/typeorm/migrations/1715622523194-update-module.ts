@@ -1,7 +1,7 @@
 import { type MigrationInterface, type QueryRunner } from 'typeorm'
 
-export class UpdateTables1715622523194 implements MigrationInterface {
-  name = 'UpdateTables1715622523194'
+export class UpdateModule1715622523194 implements MigrationInterface {
+  name = 'UpdateModule1715622523194'
 
   public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('ALTER TABLE "app_crm"."modules" RENAME COLUMN "user_id" TO "profile_id"')

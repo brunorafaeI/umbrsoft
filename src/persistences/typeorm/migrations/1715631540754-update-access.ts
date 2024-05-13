@@ -1,7 +1,7 @@
 import { type MigrationInterface, type QueryRunner } from 'typeorm'
 
-export class UpdateTables1715631540754 implements MigrationInterface {
-  name = 'UpdateTables1715631540754'
+export class UpdateAccess1715631540754 implements MigrationInterface {
+  name = 'UpdateAccess1715631540754'
 
   public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('ALTER TABLE "app_access"."users" DROP COLUMN "access"')

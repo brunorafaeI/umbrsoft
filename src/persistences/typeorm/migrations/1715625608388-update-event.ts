@@ -1,7 +1,7 @@
 import { type MigrationInterface, type QueryRunner } from 'typeorm'
 
-export class UpdateTables1715625608388 implements MigrationInterface {
-  name = 'UpdateTables1715625608388'
+export class UpdateEvent1715625608388 implements MigrationInterface {
+  name = 'UpdateEvent1715625608388'
 
   public async up (queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('ALTER TABLE "app_crm"."event_param_history" DROP CONSTRAINT "FK_7af5586136f2fc73bbd951135d0"')
