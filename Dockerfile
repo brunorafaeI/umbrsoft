@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 ## Update npm to latest version
-RUN npm i -g pnpm typescript pm2
+RUN npm i -g pnpm typescript typeorm pm2
 
 ## Install packages
 RUN pnpm i --frozen-lockfile

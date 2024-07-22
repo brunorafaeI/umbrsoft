@@ -16,11 +16,10 @@ export class Users {
 
   @Column('character varying', {
     name: 'username',
-    nullable: true,
     unique: true,
     length: 50
   })
-    username: string | null
+    username: string
 
   @Column('text', { name: 'password', nullable: true, select: false })
     password: string | null

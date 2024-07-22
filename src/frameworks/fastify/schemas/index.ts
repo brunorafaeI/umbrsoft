@@ -1,52 +1,56 @@
-import path from 'node:path'
+import path from "node:path"
 
-import { createGenerator } from 'ts-json-schema-generator'
+import { createGenerator } from "ts-json-schema-generator"
 
-import fastify from 'fastify'
-import fastifySwagger from '@fastify/swagger'
-import fastifyApiReference from '@scalar/fastify-api-reference'
+import fastify from "fastify"
+import fastifySwagger from "@fastify/swagger"
+import fastifyApiReference from "@scalar/fastify-api-reference"
 
 export interface Person {
   name: string
   age: number
-  gender: 'male' | 'female'
+  gender: "male" | "female"
 }
 
 const config = {
   path: __filename,
-  tsconfig: path.resolve(process.cwd(), 'tsconfig.json')
+  tsconfig: path.resolve(process.cwd(), "tsconfig.json"),
 }
 
 const schemaGenerator = createGenerator(config)
-const schema = schemaGenerator.createSchema('Person')
+const schema = schemaGenerator.createSchema("Person")
 
 const personSchema = schema.definitions?.Person
 
 const appFastify = fastify()
 
-appFastify.post('/', {
-  schema: {
-    body: personSchema,
-    operantionId: 'createPerson',fgjhgtyhgtgkgu rfeiutrityiuttyiyphgjigbfkj,hhjgkjkhk;jhkhhlù *hlhl;hllhllh3njjgkb;bvnfghn!7720254887411113651:n
-    response: {
-      200: personSchema
-    }
+appFastify.post(
+  "/",
+  {
+    schema: {
+      body: personSchema,
+      operantionId: "createPerson",
+      response: {
+        200: personSchema,
+      },
+    },
+  },
+  async (req, res) => {
+    return req.body
   }
-}, async (req, res) => {
-  return req.body
-})
+)
 
 void appFastify.register(fastifySwagger, {
   swagger: {
     info: {
-      title: 'UmbrSoft API',
-      version: '1.0.0'
-    }
-  }
+      title: "UmbrSoft API",
+      version: "1.0.0",
+    },
+  },
 })
 
 void appFastify.register(fastifyApiReference, {
-  routePrefix: '/docs'
+  routePrefix: "/docs",
   // uiConfig: {
   //   docExpansion: 'full'
   // },
@@ -61,4 +65,6 @@ void appFastify.register(fastifyApiReference, {
   // }
 })
 
-appFastify.listen({ port: 3000 }, () => { console.log('Server listening on port 3000') })
+appFastify.listen({ port: 3000 }, () => {
+  console.log("Server listening on port 3000")
+})

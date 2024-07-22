@@ -1,5 +1,5 @@
-import { SystemLogger } from '@/common/libs/log4js'
-import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
+import { SystemLogger } from "@/common/libs/log4js"
+import type { FastifyError, FastifyReply, FastifyRequest } from "fastify"
 
 export const onError = (
   request: FastifyRequest,
@@ -15,6 +15,6 @@ export const onError = (
   }
 
   return reply.status(500).send({
-    message: 'Internal server error.'
+    message: "Internal server error.",
   })
 }
