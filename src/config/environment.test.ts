@@ -1,44 +1,46 @@
-import dotenv from 'dotenv'
-import fs from 'node:fs'
+import dotenv from "dotenv"
+import fs from "node:fs"
 
-import { getenv } from '@/common/libs/dotenv'
-import { checkEnvFile } from '@/config/environment'
+import { getenv } from "@/common/libs/dotenv"
+import { checkEnvFile } from "@/config/environment"
 
-describe('stringUtil', () => {
-  it('should not call dotenv.config when the file does not exist', () => {
-    const envPath = 'valid/path/to/nonexistent/env/file'
-    const configSpy = vi.spyOn(dotenv, 'config').mockImplementation(() => ({}))
+describe("stringUtil", () => {
+  it("should not call dotenv.config when the file does not exist", () => {
+    const envPath = "valid/path/to/nonexistent/env/file"
+    const configSpy = vi.spyOn(dotenv, "config").mockImplementation(() => ({}))
 
     checkEnvFile(envPath)
     expect(configSpy).not.toHaveBeenCalled()
   })
 
-  it('should call dotenv.config with the provided envPath when the file exists', () => {
-    const envPath = 'valid/path/to/env/file'
-    const configSpy = vi.spyOn(dotenv, 'config').mockImplementation(() => ({}))
+  it("should call dotenv.config with the provided envPath when the file exists", () => {
+    const envPath = "valid/path/to/env/file"
+    const configSpy = vi.spyOn(dotenv, "config").mockImplementation(() => ({}))
 
-    vi.spyOn(fs, 'existsSync').mockReturnValue(true)
+    vi.spyOn(fs, "existsSync").mockReturnValue(true)
 
     checkEnvFile(envPath)
     expect(configSpy).toHaveBeenCalledWith({ path: envPath })
   })
 
-  it('should not throw an error when an invalid envPath is provided', () => {
-    const envPath = 'invalid/path/to/env/file'
-    vi.spyOn(fs, 'existsSync').mockReturnValue(false)
+  it("should not throw an error when an invalid envPath is provided", () => {
+    const envPath = "invalid/path/to/env/file"
+    vi.spyOn(fs, "existsSync").mockReturnValue(false)
 
-    expect(() => { checkEnvFile(envPath) }).not.toThrow()
+    expect(() => {
+      checkEnvFile(envPath)
+    }).not.toThrow()
   })
 
   it('should returns the NODE_ENV environment variable equal to "development"', () => {
-    vi.stubGlobal('process', {
+    vi.stubGlobal("process", {
       ...process,
       env: {
         ...process.env,
-        NODE_ENV: 'development'
-      }
+        NODE_ENV: "development",
+      },
     })
 
-    expect(getenv('NODE_ENV')).toBe('development')
+    expect(getenv("NODE_ENV")).toBe("development")
   })
 })
