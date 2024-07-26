@@ -1,12 +1,12 @@
-import 'reflect-metadata'
-import { SystemLogger } from '@/common/libs/log4js'
+import "reflect-metadata"
+import { SystemLogger } from "@/common/libs/log4js"
 
 export enum RouteMethod {
-  GET = 'get',
-  POST = 'post',
-  PUT = 'put',
-  PATCH = 'patch',
-  DELETE = 'delete',
+  GET = "get",
+  POST = "post",
+  PUT = "put",
+  PATCH = "patch",
+  DELETE = "delete",
 }
 
 export interface RouteDefinition {
@@ -15,7 +15,7 @@ export interface RouteDefinition {
   handler: (req: Request, res: Response) => void | Promise<void>
 }
 
-export const ROUTE_METADATA_KEY = Symbol('route')
+export const ROUTE_METADATA_KEY = Symbol("route")
 
 /**
  * Generates a route decorator function that adds routes to the metadata of a class.
@@ -27,10 +27,11 @@ export const ROUTE_METADATA_KEY = Symbol('route')
 export const Route = (path: string, method: RouteMethod) => {
   return (target: object, _: string, descriptor: PropertyDescriptor) => {
     try {
-      const routes = Reflect.getMetadata(ROUTE_METADATA_KEY, target.constructor) ?? []
+      const routes =
+        Reflect.getMetadata(ROUTE_METADATA_KEY, target.constructor) ?? []
       const newRoutes: RouteDefinition[] = [
         ...routes,
-        { path, method, handler: descriptor.value }
+        { path, method, handler: descriptor.value },
       ]
 
       Reflect.defineMetadata(ROUTE_METADATA_KEY, newRoutes, target.constructor)
@@ -47,10 +48,11 @@ export const Put = (path: string): any => Route(path, RouteMethod.PUT)
 
 export const Controller = (routePrefix: string) => {
   return (constructor: object) => {
-    const routes: [] = Reflect.getMetadata(ROUTE_METADATA_KEY, constructor) ?? []
+    const routes: RouteDefinition[] =
+      Reflect.getMetadata(ROUTE_METADATA_KEY, constructor) ?? []
     const newRoutes: RouteDefinition[] = []
 
-    for (const [, route] of Object.entries<RouteDefinition>(routes)) {
+    for (const route of routes) {
       newRoutes.push({ ...route, path: routePrefix.concat(route.path) })
     }
 

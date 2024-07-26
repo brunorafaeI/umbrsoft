@@ -1,44 +1,47 @@
-import { Column, Entity, Index, OneToMany } from 'typeorm'
-import { Accounts } from './Accounts'
-import { Profiles } from './Profiles'
-import { Sessions } from './Sessions'
+import { Column, Entity, Index, OneToMany } from "typeorm"
+import { Accounts } from "./Accounts"
+import { Profiles } from "./Profiles"
+import { Sessions } from "./Sessions"
 
-@Index('users_pkey', ['id'], { unique: true })
-@Index('users_username_key', ['username'], { unique: true })
-@Entity('users', { schema: 'app_access' })
+@Index("users_pkey", ["id"], { unique: true })
+@Index("users_username_key", ["username"], { unique: true })
+@Entity("users", { schema: "app_access" })
 export class Users {
-  @Column('uuid', {
+  @Column("uuid", {
     primary: true,
-    name: 'id',
-    default: () => 'gen_random_uuid()'
+    name: "id",
+    default: () => "gen_random_uuid()",
   })
-    id: string
+  id: string
 
-  @Column('character varying', {
-    name: 'username',
+  @Column("character varying", {
+    name: "username",
     unique: true,
-    length: 50
+    length: 50,
   })
-    username: string
+  username: string
 
-  @Column('text', { name: 'password', nullable: true, select: false })
-    password: string | null
+  @Column("text", { name: "password", nullable: true, select: false })
+  password: string | null
 
-  @Column('timestamp without time zone', {
-    name: 'created_at',
-    default: () => "('now')::date"
+  @Column("text", { name: "access_token" })
+  accessToken: string
+
+  @Column("timestamp without time zone", {
+    name: "created_at",
+    default: () => "('now')::date",
   })
-    createdAt: Date
+  createdAt: Date
 
-  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
-    updatedAt: Date | null
+  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  updatedAt: Date | null
 
   @OneToMany(() => Accounts, (accounts) => accounts.user)
-    accounts: Accounts[]
+  accounts: Accounts[]
 
   @OneToMany(() => Profiles, (profiles) => profiles.user)
-    profiles: Profiles[]
+  profiles: Profiles[]
 
   @OneToMany(() => Sessions, (sessions) => sessions.user)
-    sessions: Sessions[]
+  sessions: Sessions[]
 }

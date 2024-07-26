@@ -8,6 +8,8 @@ export const onError = (
 ): FastifyReply => {
   const { message, statusCode } = error
 
+  console.log({ error })
+
   SystemLogger.error(message)
 
   if (statusCode !== undefined) {

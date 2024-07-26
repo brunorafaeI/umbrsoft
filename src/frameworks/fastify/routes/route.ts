@@ -1,37 +1,42 @@
-import path from 'node:path'
-import { type FastifyInstance } from 'fastify/'
-
+// app-router.ts
+import path from "node:path"
+import { type FastifyInstance } from "fastify"
 import {
   ROUTE_METADATA_KEY,
-  type RouteDefinition
-} from '@/common/decorators/route'
-import { scandir } from '@/common/helpers/scandir'
-import { SystemLogger } from '@/common/libs/log4js'
-import { KERNEL } from '@/config/kernel'
+  type RouteDefinition,
+} from "@/common/decorators/route"
+import { scandir } from "@/common/helpers/scandir"
+import { SystemLogger } from "@/common/libs/log4js"
+import { KERNEL } from "@/config/kernel"
+import { methodWrapper } from "@/common/decorators/injectable"
 
 export abstract class AppRouter {
   public static _route: FastifyInstance
-  static async bootstrap (
+
+  static async bootstrap(
     fastify: FastifyInstance,
     options: Record<string, any>
   ): Promise<void> {
-    const controllersPath = path.resolve(KERNEL.project_dir, 'app', 'modules')
+    const controllersPath = path.resolve(KERNEL.project_dir, "app", "modules")
 
     AppRouter._route = fastify
 
     for await (const file of scandir(controllersPath)) {
-      if (file.includes('controller')) {
+      if (file.includes("controller")) {
         try {
-          const controller: object = await import(file)
+          const controllerModule: object = await import(file)
 
-          if (controller instanceof Object) {
-            const objCTRL: object =
-              'default' in controller
-                ? controller.default
-                : Object.values(controller).find(
-                  (obj) => obj instanceof Function
-                )
-            AppRouter.register(objCTRL)
+          if (controllerModule instanceof Object) {
+            const ControllerClass: object =
+              "default" in controllerModule
+                ? controllerModule.default
+                : Object.values(controllerModule).find(
+                    (obj) => obj instanceof Function
+                  )
+
+            if (ControllerClass) {
+              AppRouter.register(ControllerClass)
+            }
           }
         } catch (error: any) {
           SystemLogger.error(error.message)
@@ -40,15 +45,21 @@ export abstract class AppRouter {
     }
   }
 
-  static register (controller: object): void {
+  static register(controller: object): void {
     if (Reflect.hasMetadata(ROUTE_METADATA_KEY, controller)) {
-      const routes: RouteDefinition[] = Reflect.getMetadata(ROUTE_METADATA_KEY, controller)
+      const routes: RouteDefinition[] = Reflect.getMetadata(
+        ROUTE_METADATA_KEY,
+        controller
+      )
 
-      for (const [, route] of Object.entries(routes)) {
+      for (const route of routes) {
         const { path, method, handler } = route
 
         try {
-          (AppRouter._route as any)[method](path.replace(/\/$/, ''), handler)
+          ;(AppRouter._route as any)[method](
+            path,
+            methodWrapper(handler, controller)
+          )
         } catch (error) {
           SystemLogger.error(error.message)
         }
@@ -56,7 +67,7 @@ export abstract class AppRouter {
     }
   }
 
-  public toString (): string {
+  public toString(): string {
     return JSON.stringify(this)
   }
 }

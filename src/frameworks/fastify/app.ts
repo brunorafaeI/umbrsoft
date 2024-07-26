@@ -1,38 +1,35 @@
-import fastify from 'fastify'
-import cors from '@fastify/cors'
-import { onRequest, onError } from '@/frameworks/fastify/middlewares'
-import { AppRouter } from './routes'
-import { SwaggerConfig } from './swagger'
+import fastify from "fastify"
+import cors from "@fastify/cors"
+import { onRequest, onError } from "@/frameworks/fastify/middlewares"
+import { AppRouter } from "./routes"
+import { SwaggerConfig } from "./swagger"
 
-import fastifySwagger from '@fastify/swagger'
-import fastifyApiReference from '@scalar/fastify-api-reference'
+import fastifySwagger from "@fastify/swagger"
+import fastifyApiReference from "@scalar/fastify-api-reference"
 
 const appFastify = fastify({
-  ignoreTrailingSlash: true
+  ignoreTrailingSlash: true,
 })
 
 // Middlewares
 void appFastify.register(cors, {
-  origin: [
-    'http://localhost:3333',
-    /\.umbrsoft\.com$/
-  ]
+  origin: ["http://localhost:3333", /\.umbrsoft\.com$/],
 })
 
 // Swagger
 void appFastify.register(fastifySwagger, SwaggerConfig)
 void appFastify.register(fastifyApiReference, {
-  routePrefix: '/docs',
+  routePrefix: "/docs",
   configuration: {
-    spec: () => appFastify.swagger()
-  }
+    spec: () => appFastify.swagger(),
+  },
 })
 
 // Routers
 void appFastify.register(AppRouter.bootstrap)
 
 // Hooks
-appFastify.addHook('onRequest', onRequest)
-appFastify.addHook('onError', onError)
+appFastify.addHook("onRequest", onRequest)
+appFastify.addHook("onError", onError)
 
 export default appFastify

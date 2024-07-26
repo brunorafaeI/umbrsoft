@@ -1,62 +1,82 @@
-import type { FindManyOptions, Repository } from 'typeorm'
-import { entityManager } from '@/persistences/typeorm'
-import { Users } from '@/persistences/typeorm/models/access/Users'
-import { AppError } from '@/common/helpers/http'
+import { Repository } from "typeorm"
+import type { FindManyOptions } from "typeorm"
+import { entityManager } from "@/persistences/typeorm"
+import { Users } from "@/persistences/typeorm/models/access/Users"
+import { AppError } from "@/common/helpers/http"
 
-import crypto from 'node:crypto'
-import { ProfileService } from './profiles/profile-service'
+import crypto from "node:crypto"
+import { ProfileService } from "./profiles/profile-service"
+import { Inject, Injectable } from "@/common/decorators/injectable"
+import type { IService } from "@/app/contracts/service-interface"
+import { IJwtService } from "@/app/contracts"
+import { JwtToken } from "@/app/externals/jwt-service"
 
-export abstract class UserService {
-  static _userRepository: Repository<Users> = entityManager.getRepository(Users)
+@Injectable()
+export class UserService implements IService {
+  constructor(
+    @Inject(JwtToken.name)
+    private readonly _jwtToken: IJwtService,
+    private readonly _userRepository: Repository<Users> = entityManager.getRepository(
+      Users
+    )
+  ) {}
 
-  static async find (options?: FindManyOptions<Users>): Promise<Users[]> {
-    return await UserService._userRepository.find(options)
+  async find(options?: FindManyOptions<Users>): Promise<Users[]> {
+    return await this._userRepository.find(options)
   }
 
-  static async save (data: Partial<Users>): Promise<Users | null> {
+  async save(userId: string, data: Partial<Users>): Promise<Users | null> {
+    const userFound = await this._userRepository.findOne({
+      where: { id: userId },
+      relations: ["profiles"],
+    })
+
+    if (!userFound) {
+      throw new AppError("User not found", 404)
+    }
+
     if (!data.username) {
-      throw new AppError('Username is required', 400)
+      throw new AppError("Username is required", 400)
     }
 
     if (data.password) {
-      data.password = crypto.createHash('sha256').update(data.password).digest('hex')
+      data.password = crypto
+        .createHash("sha256")
+        .update(data.password)
+        .digest("hex")
     }
 
-    const newUser = await UserService._userRepository.save(data)
-
-    if (!newUser?.id || !newUser?.username) {
-      throw new AppError('Internal Server Error', 500)
-    }
+    const newUser = await this._userRepository.save(data)
 
     await ProfileService.save({
       email: newUser.username,
-      name: 'User Account',
-      user: newUser
+      name: "User Account",
+      user: newUser,
     })
 
-    return await UserService._userRepository.findOne({ where: { id: newUser.id }, relations: ['profiles'] })
+    return await this._userRepository.findOne({
+      where: { id: newUser.id },
+      relations: ["profiles"],
+    })
   }
 
-  static async findOrSave (data: Partial<Users>): Promise<Users> {
+  async findOrSave(data: Partial<Users>): Promise<Users> {
     const { username } = data
 
     if (!username) {
-      throw new AppError('Username is required', 400)
+      throw new AppError("Username is required", 400)
     }
 
-    const user = await UserService._userRepository.findOne({
+    const user = await this._userRepository.findOne({
       where: { username },
-      relations: ['profiles']
+      relations: ["profiles"],
     })
 
     if (!user) {
-      return await UserService._userRepository.save({ username })
+      const accessToken = await this._jwtToken.sign({ username })
+      return await this._userRepository.save({ username, accessToken })
     }
 
     return user
-  }
-
-  public toString (): string {
-    return 'UserService'
   }
 }
