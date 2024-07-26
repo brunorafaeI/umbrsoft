@@ -22,7 +22,7 @@ export function Inject(token: string | symbol) {
   return (target: object, _: any, index: number) => {
     const existingInjectedParams =
       Reflect.getOwnMetadata("inject_params", target) || []
-    existingInjectedParams.push({ index, token })
+    existingInjectedParams.unshift({ index, token })
     Reflect.defineMetadata("inject_params", existingInjectedParams, target)
   }
 }
@@ -58,6 +58,7 @@ export function methodWrapper(method: any, controllerClass: object): any {
     if (isConstructor(controllerClass)) {
       const ObjClass = controllerClass
       const controllerInstance = new ObjClass(...dependencies)
+
       return method.apply(controllerInstance, args)
     }
   }
