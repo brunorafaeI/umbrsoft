@@ -5,7 +5,7 @@ import type { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fast
 
 export const onRequest = (
   req: FastifyRequest,
-  res: FastifyReply,
+  _: FastifyReply,
   done: HookHandlerDoneFunction
 ): void => {
   const { method, url, ip, headers } = req

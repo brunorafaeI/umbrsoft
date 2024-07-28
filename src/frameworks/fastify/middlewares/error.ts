@@ -2,7 +2,7 @@ import { SystemLogger } from "@/common/libs/log4js"
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify"
 
 export const onError = (
-  request: FastifyRequest,
+  _: FastifyRequest,
   reply: FastifyReply,
   error: FastifyError
 ): FastifyReply => {

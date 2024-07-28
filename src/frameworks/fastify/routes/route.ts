@@ -57,7 +57,7 @@ export abstract class AppRouter {
 
         try {
           ;(AppRouter._route as any)[method](
-            path,
+            path.replace(/\/$/, ""),
             methodWrapper(handler, controller)
           )
         } catch (error) {
