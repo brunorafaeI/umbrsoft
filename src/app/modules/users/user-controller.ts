@@ -5,13 +5,13 @@ import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { type FindManyOptions } from "typeorm"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { UserService } from "./user-service"
 import { IRequest } from "@/app/contracts/request-interface"
+import { UserService } from "./user-service"
 
 @Controller("/users")
 export class UserController {
   constructor(
-    @Inject(UserService.name)
+    @Inject(UserService)
     private readonly _userService: IService<Users>
   ) {}
 

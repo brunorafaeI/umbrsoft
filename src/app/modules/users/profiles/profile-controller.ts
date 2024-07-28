@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Put } from "@/common/decorators/route"
-import { ProfileService } from "./profile-service"
 import { type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
@@ -7,16 +6,17 @@ import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
-import { UserService } from "../user-service"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
+import { ProfileService } from "./profile-service"
+import { UserService } from "../user-service"
 
 @Controller("/profiles")
 export class ProfileController {
   constructor(
-    @Inject(ProfileService.name)
+    @Inject(ProfileService)
     private readonly _profileService: IService<Profiles>,
 
-    @Inject(UserService.name)
+    @Inject(UserService)
     private readonly _userService: IService<Users>
   ) {}
 

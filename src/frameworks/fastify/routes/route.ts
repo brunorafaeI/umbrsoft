@@ -15,7 +15,7 @@ export abstract class AppRouter {
 
   static async bootstrap(
     fastify: FastifyInstance,
-    options: Record<string, any>
+    _: Record<string, any>
   ): Promise<void> {
     const controllersPath = path.resolve(KERNEL.project_dir, "app", "modules")
 

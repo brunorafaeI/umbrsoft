@@ -13,7 +13,7 @@ import { JwtToken } from "@/app/externals/jwt-service"
 @Injectable()
 export class UserService implements IService<Users> {
   constructor(
-    @Inject(JwtToken.name)
+    @Inject(JwtToken)
     private readonly _jwtToken: IJwtService,
     private readonly _userRepository: Repository<Users> = entityManager.getRepository(
       Users
