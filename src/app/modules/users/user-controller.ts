@@ -12,7 +12,7 @@ import { IRequest } from "@/app/contracts/request-interface"
 export class UserController {
   constructor(
     @Inject(UserService.name)
-    private readonly _userService: IService
+    private readonly _userService: IService<Users>
   ) {}
 
   @Post("/")
@@ -22,9 +22,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        users: await this._userService.find({
-          ...(body as FindManyOptions<Users>),
-        }),
+        users: await this._userService.find(body as FindManyOptions<Users>),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -39,12 +37,12 @@ export class UserController {
     const { id } = req.params
 
     try {
-      body.where = { ...body?.where, id }
+      const bodyWhere = { where: body?.where, id }
 
       return res.status(200).send({
-        users: await this._userService.find({
-          ...(body as FindManyOptions<Users>),
-        }),
+        users: await this._userService.find(
+          bodyWhere as FindManyOptions<Users>
+        ),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -57,7 +55,7 @@ export class UserController {
     const { body } = req
 
     try {
-      return res.status(200).send({
+      return res.status(201).send({
         user: await this._userService.findOrSave(body as Users),
       })
     } catch (err) {
@@ -69,11 +67,11 @@ export class UserController {
   @Put("/:id")
   async userUpdate(req: IRequest<Users>, res): Promise<Users> {
     const { body } = req
-    const { id: userId } = req.params
+    const { id } = req.params
 
     try {
       return res.status(200).send({
-        user: await this._userService.save(userId, body),
+        user: await this._userService.save(id as string, body),
       })
     } catch (err) {
       AppLogger.error(err.message)

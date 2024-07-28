@@ -1,5 +1,6 @@
-export interface IRequest<T> {
-  body: T
-  params: T
-  query: T
+import { type FastifyRequest } from "fastify"
+
+export interface IRequest<T> extends FastifyRequest {
+  body: Partial<T>
+  params: any
 }

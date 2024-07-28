@@ -1,8 +1,8 @@
-import type { Users } from "@/persistences/typeorm/models/access/Users"
-import type { FindManyOptions } from "typeorm"
+import type { FindManyOptions, FindOneOptions } from "typeorm"
 
-export interface IService {
-  find: (options?: FindManyOptions<Users>) => Promise<Users[]>
-  save: (id: string, data: Partial<Users>) => Promise<Users | null>
-  findOrSave: (data: Partial<Users>) => Promise<Users>
+export interface IService<T> {
+  find: (options?: FindManyOptions<T>) => Promise<T[] | null>
+  findOne: (options: FindOneOptions<T>) => Promise<T | null>
+  save: (id: string, data: Partial<T>) => Promise<T | null>
+  findOrSave: (data: Partial<T>) => Promise<T>
 }
