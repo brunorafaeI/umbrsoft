@@ -66,9 +66,9 @@ export class Profiles {
   @Column("enum", {
     name: "type",
     nullable: true,
-    enum: ["STANDARD", "PRO", "ENTREPRISE"],
+    enum: ["STUDENT", "EMPLOYEE", "BUSINESS", "SELF_EMPLOYED"],
   })
-  type: "STANDARD" | "PRO" | "ENTREPRISE" | null
+  type: "STUDENT" | "EMPLOYEE" | "BUSINESS" | "SELF_EMPLOYED" | null
 
   @Column("timestamp without time zone", {
     name: "created_at",

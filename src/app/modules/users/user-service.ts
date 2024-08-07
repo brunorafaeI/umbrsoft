@@ -37,6 +37,21 @@ export class UserService implements IService<Users> {
       where: { id: userId },
     })
 
+    if (!userFound) {
+      throw new AppError("User not found", 404)
+    }
+
+    return await this._userRepository.save({
+      ...userFound,
+      ...data,
+    })
+  }
+
+  async create(data: Partial<Users>): Promise<Users | null> {
+    const userFound = await this._userRepository.findOne({
+      where: { username: data.username },
+    })
+
     if (userFound) {
       throw new AppError("User already exists", 400)
     }
@@ -73,5 +88,17 @@ export class UserService implements IService<Users> {
     }
 
     return user
+  }
+
+  async remove(id: string): Promise<Users | null> {
+    const userFound = await this._userRepository.findOne({
+      where: { id },
+    })
+
+    if (!userFound) {
+      throw new AppError("User not found", 404)
+    }
+
+    return await this._userRepository.remove(userFound)
   }
 }

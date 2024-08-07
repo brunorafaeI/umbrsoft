@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put } from "@/common/decorators/route"
+import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import { type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
@@ -57,24 +57,28 @@ export class ProfileController {
     }
   }
 
-  @Put("/:userId")
-  async profileCreate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  @Put("/:id")
+  async profileUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
     const { body } = req
-    const { userId } = req.params
+    const { id } = req.params
 
     try {
-      const user = await this._userService.findOne({
-        where: { id: userId },
+      return res.status(200).send({
+        user: await this._profileService.save(id as string, body),
       })
+    } catch (err) {
+      AppLogger.error(err.message)
+      throw new AppError("Internal Server Error", 500)
+    }
+  }
 
-      if (user) {
-        body.user = user
-      }
+  @Delete("/:id")
+  async profileDelete(req, res): Promise<Profiles> {
+    const { id } = req.params
 
-      return res.status(201).send({
-        profile: await this._profileService.findOrSave({
-          ...body,
-        }),
+    try {
+      return res.status(200).send({
+        user: await this._profileService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)
