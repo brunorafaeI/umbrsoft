@@ -84,6 +84,20 @@ export class UserController {
     }
   }
 
+  @Delete("/:id")
+  async userDelete(req, res): Promise<Users> {
+    const { id } = req.params
+
+    try {
+      return res.status(200).send({
+        user: await this._userService.remove(id as string),
+      })
+    } catch (err) {
+      AppLogger.error(err.message)
+      throw new AppError("Internal Server Error", 500)
+    }
+  }
+
   @Put("/:id/profiles")
   async profileCreate(req: IRequest<Profiles>, res): Promise<Profiles> {
     const { body } = req
@@ -103,20 +117,6 @@ export class UserController {
           ...body,
           user,
         }),
-      })
-    } catch (err) {
-      AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
-    }
-  }
-
-  @Delete("/:id")
-  async userDelete(req, res): Promise<Users> {
-    const { id } = req.params
-
-    try {
-      return res.status(200).send({
-        user: await this._userService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

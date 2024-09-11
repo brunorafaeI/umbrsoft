@@ -1,17 +1,12 @@
+import { IRequest } from "@/app/contracts/request-interface"
 import { Controller, Post } from "@/common/decorators/route"
-import { type Users } from "@/persistences/typeorm/models/access/Users"
-import { type FastifyRequest } from "fastify"
 
-interface LoginFormRequest extends FastifyRequest {
-  body: {
-    credentials: Partial<Pick<Users, "username" | "password">>
-  }
-}
+type LoginRequest = IRequest<{ username: string; password?: string }>
 
 @Controller("/auth")
 export class LoginController {
   @Post("/login")
-  async login(req: LoginFormRequest, res): Promise<any> {
+  async login(req: LoginRequest, res): Promise<any> {
     return res.status(200).send({ body: req.body })
   }
 }

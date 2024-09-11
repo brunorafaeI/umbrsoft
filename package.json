@@ -4,8 +4,8 @@
   "description": "",
   "main": "build/server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node -r tsconfig-paths/register dist/server.js",
+    "build": "swc src -d build --strip-leading-paths",
+    "start": "node -r tsconfig-paths/register build/server.js",
     "dev:server": "tsx --watch -r tsconfig-paths/register --inspect=0.0.0.0:9229 ./src/server.ts",
     "typeorm": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:generate": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate ./src/persistences/typeorm/migrations/update-tables -d ./src/persistences/typeorm/index.ts",
@@ -20,6 +20,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.7.26",
     "@types/cors": "^2.8.14",
     "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
