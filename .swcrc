@@ -5,18 +5,7 @@
       "syntax": "typescript",
       "tsx": true,
       "dynamicImport": true,
-      "decorators": true,
-      
-    },
-    "transform": {
-      "react": {
-        "runtime": "automatic",
-        "pragma": "React.createElement",
-        "pragmaFrag": "React.Fragment",
-        "throwIfNamespace": false,
-        "development": false,
-        "useBuiltins": true
-      }
+      "decorators": true
     },
     "baseUrl": "./src",
     "paths": {
