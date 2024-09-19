@@ -6,26 +6,22 @@ import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
-import { ContactService } from "./contact-service"
-import { Contacts } from "@/persistences/typeorm/models/access/Contacts"
-import { FindManyOptions } from "typeorm"
+import { BankingInfoService } from "./banking-info-service"
+import { BankingInfo } from "@/persistences/typeorm/models/access/BankingInfo"
 
 @Controller("/profiles")
-export class ProfileContactController {
+export class ProfileBankingInfoController {
   constructor(
     @Inject(ProfileService)
     private readonly _profileService: IService<Profiles>,
 
-    @Inject(ContactService)
-    private readonly _contactService: IService<Contacts>
+    @Inject(BankingInfoService)
+    private readonly _bankingInfoService: IService<BankingInfo>
   ) {}
 
-  @Get("/:id/contacts")
-  @Post("/:id/contacts")
-  async profileContactIndex(
-    req: IRequest<FindManyOptions<Contacts>>,
-    res
-  ): Promise<Contacts> {
+  @Get("/:id/banking-info")
+  @Post("/:id/banking-info")
+  async profileBankingIndex(req, res): Promise<BankingInfo> {
     const { body } = req
     const { id } = req.params
 
@@ -34,10 +30,13 @@ export class ProfileContactController {
         where: { id },
       })
 
-      const bodyWhere = { ...body, where: { ...body?.where, profile } }
+      const bodyWhere = { where: body?.where, profile }
 
       return res.status(200).send({
-        contacts: await this._contactService.find(bodyWhere),
+        bankings: await this._bankingInfoService.find({
+          ...body,
+          ...bodyWhere,
+        }),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -45,8 +44,8 @@ export class ProfileContactController {
     }
   }
 
-  @Put("/:id/contacts")
-  async profileContactCreate(req: IRequest<Contacts>, res): Promise<Contacts> {
+  @Put("/:id/banking-info")
+  async profileBankingCreate(req: IRequest<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
@@ -55,12 +54,8 @@ export class ProfileContactController {
         where: { id },
       })
 
-      if (!profile) {
-        throw new AppError("Profile not found", 404)
-      }
-
       return res.status(201).send({
-        contact: await this._contactService.findOrSave({
+        banking: await this._bankingInfoService.findOrSave({
           ...body,
           profile,
         }),

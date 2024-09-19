@@ -14,28 +14,31 @@ export class BookingService implements IService<Bookings> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<Bookings>): Promise<Bookings[] | null> {
+  async find(options?: FindManyOptions<Bookings>): Promise<Bookings[]> {
     return await this._bookingRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Bookings>): Promise<Bookings | null> {
+  async findOne(options: FindOneOptions<Bookings>): Promise<Bookings> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
-    return await this._bookingRepository.findOne(options)
+
+    const bookingFound = await this._bookingRepository.findOne(options)
+
+    if (!bookingFound) {
+      throw new AppError("Booking not found", 404)
+    }
+
+    return bookingFound
   }
 
   async save(
     bookingId: string,
     data: Partial<Bookings>
   ): Promise<Bookings | null> {
-    const bookingFound = await this._bookingRepository.findOne({
+    const bookingFound = await this.findOne({
       where: { id: bookingId },
     })
-
-    if (!bookingFound) {
-      throw new AppError("Booking not found", 404)
-    }
 
     return await this._bookingRepository.save({
       ...bookingFound,
@@ -80,13 +83,9 @@ export class BookingService implements IService<Bookings> {
   }
 
   async remove(bookingId: string): Promise<Bookings | null> {
-    const bookingFound = await this._bookingRepository.findOne({
+    const bookingFound = await this.findOne({
       where: { id: bookingId },
     })
-
-    if (!bookingFound) {
-      throw new AppError("Booking not found", 404)
-    }
 
     return await this._bookingRepository.remove(bookingFound)
   }

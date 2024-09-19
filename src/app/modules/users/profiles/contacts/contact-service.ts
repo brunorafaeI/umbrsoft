@@ -14,29 +14,32 @@ export class ContactService implements IService<Contacts> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<Contacts>): Promise<Contacts[] | null> {
+  async find(options?: FindManyOptions<Contacts>): Promise<Contacts[]> {
     return await this._contactRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts | null> {
+  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
-    return await this._contactRepository.findOne(options)
+
+    const contactFound = await this._contactRepository.findOne(options)
+
+    if (!contactFound) {
+      throw new AppError("Contact not found", 404)
+    }
+
+    return contactFound
   }
 
   async save(
     contactId: string,
     data: Partial<Contacts>
   ): Promise<Contacts | null> {
-    const contactFound = await this._contactRepository.findOne({
+    const contactFound = await this.findOne({
       where: { id: contactId },
     })
-
-    if (!contactFound) {
-      throw new AppError("Contact not found", 404)
-    }
-
+    
     return await this._contactRepository.save({
       ...contactFound,
       ...data,
@@ -84,13 +87,9 @@ export class ContactService implements IService<Contacts> {
   }
 
   async remove(contactId: string): Promise<Contacts | null> {
-    const contactFound = await this._contactRepository.findOne({
+    const contactFound = await this.findOne({
       where: { id: contactId },
     })
-
-    if (!contactFound) {
-      throw new AppError("COntact not found", 404)
-    }
 
     return await this._contactRepository.remove(contactFound)
   }

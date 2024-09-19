@@ -8,6 +8,7 @@ import { IRequest } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { BookingService } from "./booking-service"
 import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { FindManyOptions } from "typeorm"
 
 @Controller("/profiles")
 export class ProfileBookingController {
@@ -21,7 +22,10 @@ export class ProfileBookingController {
 
   @Get("/:id/bookings")
   @Post("/:id/bookings")
-  async profileBookingIndex(req, res): Promise<Bookings> {
+  async profileBookingIndex(
+    req: IRequest<FindManyOptions<Bookings>>,
+    res
+  ): Promise<Bookings> {
     const { body } = req
     const { id } = req.params
 
@@ -30,17 +34,10 @@ export class ProfileBookingController {
         where: { id },
       })
 
-      if (!profile) {
-        throw new AppError("Profile not found", 404)
-      }
-
-      const bodyWhere = { where: body?.where, profile }
+      const bodyWhere = { ...body, where: { ...body?.where, profile } }
 
       return res.status(200).send({
-        bookings: await this._bookingService.find({
-          ...body,
-          ...bodyWhere,
-        }),
+        bookings: await this._bookingService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -57,10 +54,6 @@ export class ProfileBookingController {
       const profile = await this._profileService.findOne({
         where: { id },
       })
-
-      if (!profile) {
-        throw new AppError("Profile not found", 404)
-      }
 
       return res.status(201).send({
         booking: await this._bookingService.findOrSave({

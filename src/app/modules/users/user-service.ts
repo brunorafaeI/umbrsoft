@@ -24,12 +24,18 @@ export class UserService implements IService<Users> {
     return await this._userRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Users>): Promise<Users | null> {
+  async findOne(options: FindOneOptions<Users>): Promise<Users> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    return await this._userRepository.findOne(options)
+    const userFound = await this._userRepository.findOne(options)
+
+    if (!userFound) {
+      throw new AppError("User not found", 404)
+    }
+
+    return userFound
   }
 
   async save(userId: string, data: Partial<Users>): Promise<Users | null> {

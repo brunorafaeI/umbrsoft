@@ -46,7 +46,7 @@ export class UserController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        users: await this._userService.findOne(bodyWhere),
+        user: await this._userService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)

@@ -6,19 +6,20 @@ import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
-import { BookingService } from "./booking-service"
 import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { BankingInfoService } from "./banking-info-service"
 
-@Controller("/bookings")
-export class ProfileController {
+
+@Controller("/bankings")
+export class ProfileBankingInfoController {
   constructor(
-    @Inject(BookingService)
-    private readonly _bookingService: IService<Bookings>
+    @Inject(BankingInfoService)
+    private readonly _bankingService: IService<Bookings>
   ) {}
 
   @Get("/")
   @Post("/")
-  async bookingIndex(
+  async bankingIndex(
     req: IRequest<FindManyOptions<Bookings>>,
     res
   ): Promise<Bookings[]> {
@@ -26,7 +27,7 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        bookings: await this._bookingService.find(body),
+        bankings: await this._bankingService.find(body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -36,7 +37,7 @@ export class ProfileController {
 
   @Get("/:id")
   @Post("/:id")
-  async bookingFindOne(
+  async bankingFindOne(
     req: IRequest<FindOneOptions<Bookings>>,
     res
   ): Promise<Profiles[]> {
@@ -47,7 +48,7 @@ export class ProfileController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        booking: await this._bookingService.findOne(bodyWhere),
+        banking: await this._bankingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -56,13 +57,13 @@ export class ProfileController {
   }
 
   @Put("/:id")
-  async bookingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async bankingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        booking: await this._bookingService.save(id as string, body),
+        banking: await this._bankingService.save(id as string, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -71,12 +72,12 @@ export class ProfileController {
   }
 
   @Delete("/:id")
-  async bookingDelete(req, res): Promise<Profiles> {
+  async bankingDelete(req, res): Promise<Profiles> {
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        booking: await this._bookingService.remove(id as string),
+        banking: await this._bankingService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

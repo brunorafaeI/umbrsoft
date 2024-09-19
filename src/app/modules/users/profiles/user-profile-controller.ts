@@ -8,9 +8,10 @@ import { IRequest } from "@/app/contracts/request-interface"
 import { Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { UserService } from "../user-service"
 import { ProfileService } from "./profile-service"
+import type { FindManyOptions } from "typeorm"
 
 @Controller("/users")
-export class UserController {
+export class UserProfileController {
   constructor(
     @Inject(UserService)
     private readonly _userService: IService<Users>,
@@ -21,7 +22,10 @@ export class UserController {
 
   @Get("/:id/profiles")
   @Post("/:id/profiles")
-  async userProfileIndex(req, res): Promise<Profiles> {
+  async userProfileIndex(
+    req: IRequest<FindManyOptions<Profiles>>,
+    res
+  ): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
@@ -30,17 +34,10 @@ export class UserController {
         where: { id },
       })
 
-      if (!user) {
-        throw new AppError("Profile not found", 404)
-      }
-
-      const bodyWhere = { where: body?.where, user }
+      const bodyWhere = { ...body, where: { ...body?.where, user } }
 
       return res.status(200).send({
-        profiles: await this._profileService.find({
-          ...body,
-          bodyWhere,
-        }),
+        profiles: await this._profileService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -57,10 +54,6 @@ export class UserController {
       const user = await this._userService.findOne({
         where: { id },
       })
-
-      if (!user) {
-        throw new AppError("User not found", 404)
-      }
 
       return res.status(201).send({
         profile: await this._profileService.findOrSave({
