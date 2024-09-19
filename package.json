@@ -11,7 +11,8 @@
     "typeorm:generate": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate ./src/persistences/typeorm/migrations/update-tables -d ./src/persistences/typeorm/index.ts",
     "typeorm:run": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/persistences/typeorm/index.ts",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=20.9.0"

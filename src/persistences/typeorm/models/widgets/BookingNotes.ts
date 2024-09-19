@@ -9,7 +9,7 @@ export class BookingNotes {
     name: "id",
     default: () => "gen_random_uuid()",
   })
-  id: string  
+  id: string
 
   @Column("enum", {
     name: "status",

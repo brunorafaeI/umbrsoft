@@ -70,7 +70,7 @@ export class ProfileController {
   }
 
   @Delete("/:id")
-  async profileDelete(req, res): Promise<Profiles> {
+  async profileDelete(req: IRequest<{ id: string }>, res): Promise<Profiles> {
     const { id } = req.params
 
     try {

@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import { ContactService } from "./contact-service"
-import { FindOneOptions, type FindManyOptions } from "typeorm"
+import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
@@ -70,7 +70,7 @@ export class ContactController {
   }
 
   @Delete("/:id")
-  async contactDelete(req, res): Promise<Contacts> {
+  async contactDelete(req: IRequest<{ id: string }>, res): Promise<Contacts> {
     const { id } = req.params
 
     try {

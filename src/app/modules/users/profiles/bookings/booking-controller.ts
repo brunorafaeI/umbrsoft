@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
-import { FindOneOptions, type FindManyOptions } from "typeorm"
+import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
@@ -7,7 +7,7 @@ import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
 import { BookingService } from "./booking-service"
-import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
 
 @Controller("/bookings")
 export class ProfileController {
@@ -62,7 +62,7 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        booking: await this._bookingService.save(id as string, body),
+        booking: await this._bookingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)

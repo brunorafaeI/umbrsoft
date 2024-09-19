@@ -39,7 +39,7 @@ export class ContactService implements IService<Contacts> {
     const contactFound = await this.findOne({
       where: { id: contactId },
     })
-    
+
     return await this._contactRepository.save({
       ...contactFound,
       ...data,

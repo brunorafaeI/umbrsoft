@@ -47,7 +47,7 @@ describe("getEnv", () => {
   it("should throw a TypeError when the environment variable is not of type integer and the fallback is null", () => {
     process.env.TEST_VAR = "test_value"
     expect(() => {
-      // @ts-expect-error
+      // @ts-expect-error need it to test fallback value
       getEnv("TEST_VAR", null)
     }).toThrow(TypeError)
   })
@@ -69,7 +69,7 @@ describe("getEnvString", () => {
     }).toThrow(ReferenceError)
 
     expect(() => {
-      // @ts-expect-error
+      // @ts-expect-error need it to test fallback value
       getEnvString("ENV_VAR", null)
     }).toThrow(TypeError)
   })
@@ -133,7 +133,7 @@ it("should handle float values with leading/trailing spaces correctly", () => {
 describe("getEnvInteger", () => {
   // should throw TypeError when fallback value is provided but not of type integer
   it("should throw TypeError when fallback value is provided but not of type integer", () => {
-    // @ts-expect-error
+    // @ts-expect-error need it to test fallback value
     expect(getEnvInteger("ENV_VAR", "fallback")).toThrow(TypeError)
   })
 

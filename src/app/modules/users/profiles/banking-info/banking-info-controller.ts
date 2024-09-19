@@ -1,14 +1,13 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
-import { FindOneOptions, type FindManyOptions } from "typeorm"
+import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
-import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
 import { BankingInfoService } from "./banking-info-service"
-
 
 @Controller("/bankings")
 export class ProfileBankingInfoController {
@@ -63,7 +62,7 @@ export class ProfileBankingInfoController {
 
     try {
       return res.status(200).send({
-        banking: await this._bankingService.save(id as string, body),
+        banking: await this._bankingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)

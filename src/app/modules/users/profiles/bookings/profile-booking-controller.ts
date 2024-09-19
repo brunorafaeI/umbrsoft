@@ -7,8 +7,8 @@ import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { BookingService } from "./booking-service"
-import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
-import { FindManyOptions } from "typeorm"
+import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { type FindManyOptions } from "typeorm"
 
 @Controller("/profiles")
 export class ProfileBookingController {

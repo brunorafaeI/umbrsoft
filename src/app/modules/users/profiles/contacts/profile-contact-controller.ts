@@ -7,8 +7,8 @@ import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { ContactService } from "./contact-service"
-import { Contacts } from "@/persistences/typeorm/models/access/Contacts"
-import { FindManyOptions } from "typeorm"
+import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
+import { type FindManyOptions } from "typeorm"
 
 @Controller("/profiles")
 export class ProfileContactController {

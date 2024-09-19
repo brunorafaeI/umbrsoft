@@ -5,7 +5,7 @@ import { Controller, Post } from "@/common/decorators/route"
 export class AuthController {
   @Post("/login")
   async authLogin(
-    req: IRequest<{ username: string; password?: string }>,
+    req: IRequest<{ username: string, password?: string }>,
     res
   ): Promise<any> {
     return res.status(200).send({ body: req.body })

@@ -2,7 +2,7 @@ import { Controller, Put, Post, Get, Delete } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
-import { FindOneOptions, type FindManyOptions } from "typeorm"
+import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
@@ -84,7 +84,7 @@ export class UserController {
   }
 
   @Delete("/:id")
-  async userDelete(req, res): Promise<Users> {
+  async userDelete(req: IRequest<{ id: string }>, res): Promise<Users> {
     const { id } = req.params
 
     try {

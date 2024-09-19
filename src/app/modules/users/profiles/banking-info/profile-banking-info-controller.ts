@@ -7,7 +7,8 @@ import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { BankingInfoService } from "./banking-info-service"
-import { BankingInfo } from "@/persistences/typeorm/models/access/BankingInfo"
+import { type BankingInfo } from "@/persistences/typeorm/models/access/BankingInfo"
+import { type FindManyOptions } from "typeorm"
 
 @Controller("/profiles")
 export class ProfileBankingInfoController {
@@ -21,7 +22,10 @@ export class ProfileBankingInfoController {
 
   @Get("/:id/banking-info")
   @Post("/:id/banking-info")
-  async profileBankingIndex(req, res): Promise<BankingInfo> {
+  async profileBankingIndex(
+    req: IRequest<FindManyOptions<BankingInfo>>,
+    res
+  ): Promise<BankingInfo> {
     const { body } = req
     const { id } = req.params
 
@@ -33,10 +37,7 @@ export class ProfileBankingInfoController {
       const bodyWhere = { where: body?.where, profile }
 
       return res.status(200).send({
-        bankings: await this._bankingInfoService.find({
-          ...body,
-          ...bodyWhere,
-        }),
+        bankings: await this._bankingInfoService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
