@@ -1,60 +1,67 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
-import { ParamModuleGroup } from './ParamModuleGroup'
-import { RelationContractModule } from './RelationContractModule'
-import { Widgets } from './Widgets'
-import { Profiles } from '../access/Profiles'
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm"
+import { ParamModuleGroup } from "./ParamModuleGroup"
+import { RelationContractModule } from "./RelationContractModule"
+import { Widgets } from "./Widgets"
+import { Profiles } from "../access/Profiles"
 
-@Index('modules_pkey', ['id'], { unique: true })
-@Entity('modules', { schema: 'app_crm' })
+@Index("modules_pkey", ["id"], { unique: true })
+@Entity("modules", { schema: "app_crm" })
 export class Modules {
-  @Column('uuid', {
+  @Column("uuid", {
     primary: true,
-    name: 'id',
-    default: () => 'gen_random_uuid()'
+    name: "id",
+    default: () => "gen_random_uuid()",
   })
-    id: string
+  id: string
 
-  @Column('character varying', { name: 'title', nullable: true, length: 30 })
-    title: string | null
+  @Column("character varying", { name: "title", nullable: true, length: 30 })
+  title: string | null
 
-  @Column('character varying', {
-    name: 'description',
+  @Column("character varying", {
+    name: "description",
     nullable: true,
-    length: 50
+    length: 50,
   })
-    description: string | null
+  description: string | null
 
   @ManyToOne(() => Profiles, (profiles) => profiles.modules, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: 'profile_id', referencedColumnName: 'id' }])
-    profile: Profiles
+  @JoinColumn([{ name: "profile_id", referencedColumnName: "id" }])
+  profile: Profiles
 
-  @Column('integer', { name: 'status', nullable: true })
-    status: number | null
+  @Column("integer", { name: "status", nullable: true })
+  status: number | null
 
-  @Column('timestamp without time zone', {
-    name: 'created_at',
-    default: () => "('now')::date"
+  @Column("timestamp without time zone", {
+    name: "created_at",
+    default: () => "('now')::date",
   })
-    createdAt: Date
+  createdAt: Date
 
-  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
-    updatedAt: Date | null
+  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  updatedAt: Date | null
 
   @OneToMany(
     () => ParamModuleGroup,
     (paramModuleGroup) => paramModuleGroup.module
   )
-    paramModuleGroups: ParamModuleGroup[]
+  paramModuleGroups: ParamModuleGroup[]
 
   @OneToMany(
     () => RelationContractModule,
     (relationContractModule) => relationContractModule.module
   )
-    relationContractModules: RelationContractModule[]
+  relationContractModules: RelationContractModule[]
 
   @OneToMany(() => Widgets, (widgets) => widgets.module)
-    widgets: Widgets[]
+  widgets: Widgets[]
 }

@@ -1,27 +1,27 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm"
 
-@Index('param_module_status_pkey', ['id'], { unique: true })
-@Entity('param_module_status', { schema: 'app_crm' })
+@Index("param_module_status_pkey", ["id"], { unique: true })
+@Entity("param_module_status", { schema: "app_crm" })
 export class ParamModuleStatus {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
-    id: number
+  @PrimaryGeneratedColumn({ type: "integer", name: "id" })
+  id: number
 
-  @Column('character varying', { name: 'title', nullable: true, length: 30 })
-    title: string | null
+  @Column("character varying", { name: "title", nullable: true, length: 30 })
+  title: string | null
 
-  @Column('character varying', {
-    name: 'description',
+  @Column("character varying", {
+    name: "description",
     nullable: true,
-    length: 50
+    length: 50,
   })
-    description: string | null
+  description: string | null
 
-  @Column('timestamp without time zone', {
-    name: 'created_at',
-    default: () => "('now')::date"
+  @Column("timestamp without time zone", {
+    name: "created_at",
+    default: () => "('now')::date",
   })
-    createdAt: Date
+  createdAt: Date
 
-  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
-    updatedAt: Date | null
+  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  updatedAt: Date | null
 }

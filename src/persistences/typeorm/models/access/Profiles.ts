@@ -13,6 +13,7 @@ import { Users } from "./Users"
 import { Modules } from "../crm/Modules"
 import { EventParamHistory } from "./EventParamHistory"
 import { EventTableHistory } from "./EventTableHistory"
+import { Bookings } from "../widgets/Bookings"
 
 @Index("profiles_pkey", ["id"], { unique: true })
 @Entity("profiles", { schema: "app_access" })

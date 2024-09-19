@@ -1,48 +1,48 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
-import { Profiles } from './Profiles'
+import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm"
+import { Profiles } from "./Profiles"
 
-@Index('banking_info_pkey', ['id'], { unique: true })
-@Entity('banking_info', { schema: 'app_access' })
+@Index("banking_info_pkey", ["id"], { unique: true })
+@Entity("banking_info", { schema: "app_access" })
 export class BankingInfo {
-  @Column('uuid', {
+  @Column("uuid", {
     primary: true,
-    name: 'id',
-    default: () => 'gen_random_uuid()'
+    name: "id",
+    default: () => "gen_random_uuid()",
   })
-    id: string
+  id: string
 
-  @Column('character varying', { name: 'name', nullable: true, length: 50 })
-    name: string | null
+  @Column("character varying", { name: "name", nullable: true, length: 50 })
+  name: string | null
 
-  @Column('character varying', {
-    name: 'account_holder',
+  @Column("character varying", {
+    name: "account_holder",
     nullable: true,
-    length: 50
+    length: 50,
   })
-    accountHolder: string | null
+  accountHolder: string | null
 
-  @Column('integer', { name: 'account_number', nullable: true })
-    accountNumber: number | null
+  @Column("integer", { name: "account_number", nullable: true })
+  accountNumber: number | null
 
-  @Column('character varying', { name: 'iban', nullable: true, length: 100 })
-    iban: string | null
+  @Column("character varying", { name: "iban", nullable: true, length: 100 })
+  iban: string | null
 
-  @Column('character varying', { name: 'bic', nullable: true, length: 30 })
-    bic: string | null
+  @Column("character varying", { name: "bic", nullable: true, length: 30 })
+  bic: string | null
 
-  @Column('timestamp without time zone', {
-    name: 'created_at',
-    default: () => "('now')::date"
+  @Column("timestamp without time zone", {
+    name: "created_at",
+    default: () => "('now')::date",
   })
-    createdAt: Date
+  createdAt: Date
 
-  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
-    updatedAt: Date | null
+  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  updatedAt: Date | null
 
   @ManyToOne(() => Profiles, (profiles) => profiles.bankingInfos, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: 'profile_id', referencedColumnName: 'id' }])
-    profile: Profiles
+  @JoinColumn([{ name: "profile_id", referencedColumnName: "id" }])
+  profile: Profiles
 }
