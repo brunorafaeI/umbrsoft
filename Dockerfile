@@ -25,7 +25,7 @@ COPY --from=builder /usr/src/app/package.json /usr/src/app/pnpm-lock.yaml ./
 COPY --from=builder /usr/src/app/process.example.json ./process.json
 COPY --from=builder /usr/src/app/.env ./.env
 
-RUN pnpm i --frozen-lockfile
+RUN pnpm i --frozen-lockfile --ignore-scripts
 
 EXPOSE 4554
 
