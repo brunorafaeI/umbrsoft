@@ -1,35 +1,32 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
-import { type FindManyOptions } from "typeorm"
+import { FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
-import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { BookingService } from "./booking-service"
-import { ProfileService } from "../profile-service"
+import { Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
 
-@Controller("/bookings/:profileId/bookings")
+@Controller("/bookings")
 export class ProfileController {
   constructor(
     @Inject(BookingService)
-    private readonly _bookingService: IService<Profiles>,
-
-    @Inject(ProfileService)
-    private readonly _profileService: IService<Users>
+    private readonly _bookingService: IService<Bookings>
   ) {}
 
   @Get("/")
   @Post("/")
-  async bookingIndex(req, res): Promise<Profiles[]> {
+  async bookingIndex(
+    req: IRequest<FindManyOptions<Bookings>>,
+    res
+  ): Promise<Bookings[]> {
     const { body } = req
 
     try {
       return res.status(200).send({
-        bookings: await this._bookingService.find({
-          ...(body as FindManyOptions<Profiles>),
-        }),
+        bookings: await this._bookingService.find(body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -39,17 +36,18 @@ export class ProfileController {
 
   @Get("/:id")
   @Post("/:id")
-  async bookingFindOne(req, res): Promise<Profiles[]> {
+  async bookingFindOne(
+    req: IRequest<FindOneOptions<Bookings>>,
+    res
+  ): Promise<Profiles[]> {
     const { body } = req
     const { id } = req.params
 
     try {
-      const bodyWhere = { where: body?.where, id }
+      const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        bookings: await this._bookingService.find(
-          bodyWhere as FindManyOptions<Profiles>
-        ),
+        bookings: await this._bookingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)

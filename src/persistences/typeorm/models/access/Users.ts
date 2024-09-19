@@ -39,10 +39,7 @@ export class Users {
   @OneToMany(() => Accounts, (accounts) => accounts.user)
   accounts: Accounts[]
 
-  @OneToMany(() => Profiles, (profiles) => profiles.user, {
-    eager: true,
-    persistence: true,
-  })
+  @OneToMany(() => Profiles, (profiles) => profiles.user)
   profiles: Profiles[]
 
   @OneToMany(() => Sessions, (sessions) => sessions.user)
