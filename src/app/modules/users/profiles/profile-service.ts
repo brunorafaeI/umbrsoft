@@ -5,7 +5,6 @@ import { Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { AppError } from "@/common/helpers/http"
 import { type IService } from "@/app/contracts"
 import { Injectable } from "@/common/decorators/injectable"
-import { Users } from "@/persistences/typeorm/models/access/Users"
 
 @Injectable()
 export class ProfileService implements IService<Profiles> {
@@ -45,15 +44,17 @@ export class ProfileService implements IService<Profiles> {
   }
 
   async create(data: Partial<Profiles>): Promise<Profiles | null> {
-    if (!data.user) {
+    const { user, name, email } = data
+
+    if (!user) {
       throw new AppError("User is required", 400)
     }
 
-    if (!data.name) {
+    if (!name) {
       throw new AppError("Name is required", 400)
     }
 
-    if (!data.email) {
+    if (!email) {
       throw new AppError("Email is required", 400)
     }
 
@@ -61,7 +62,7 @@ export class ProfileService implements IService<Profiles> {
   }
 
   async findOrSave(data: Partial<Profiles>): Promise<Profiles> {
-    const { name, user } = data
+    const { user, name } = data
 
     if (!name) {
       throw new AppError("Name is required", 400)

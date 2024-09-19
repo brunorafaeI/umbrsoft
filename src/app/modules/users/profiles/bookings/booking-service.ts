@@ -44,11 +44,13 @@ export class BookingService implements IService<Bookings> {
   }
 
   async create(data: Partial<Bookings>): Promise<Bookings | null> {
-    if (!data.profile) {
+    const { profile, scheduledAt } = data
+
+    if (!profile) {
       throw new AppError("Profile is required", 400)
     }
 
-    if (!data.scheduledAt) {
+    if (!scheduledAt) {
       throw new AppError("ScheduledAt is required", 400)
     }
 
@@ -56,7 +58,7 @@ export class BookingService implements IService<Bookings> {
   }
 
   async findOrSave(data: Partial<Bookings>): Promise<Bookings> {
-    const { scheduledAt, profile } = data
+    const { profile, scheduledAt } = data
 
     if (!scheduledAt) {
       throw new AppError("ScheduledAt is required", 400)
