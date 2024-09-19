@@ -1,28 +1,97 @@
-import type { FindManyOptions, Repository } from 'typeorm'
-import { entityManager } from '@/persistences/typeorm'
-import { Contacts } from '@/persistences/typeorm/models/access/Contacts'
-import { AppError } from '@/common/helpers/http'
+import { Repository } from "typeorm"
+import type { FindManyOptions, FindOneOptions } from "typeorm"
+import { entityManager } from "@/persistences/typeorm"
+import { Contacts } from "@/persistences/typeorm/models/access/Contacts"
+import { AppError } from "@/common/helpers/http"
+import { type IService } from "@/app/contracts"
+import { Injectable } from "@/common/decorators/injectable"
 
-export abstract class ContactService {
-  static _userRepository: Repository<Contacts> = entityManager.getRepository(Contacts)
+@Injectable()
+export class ContactService implements IService<Contacts> {
+  constructor(
+    private readonly _contactRepository: Repository<Contacts> = entityManager.getRepository(
+      Contacts
+    )
+  ) {}
 
-  static async find (options?: FindManyOptions<Contacts>): Promise<Contacts[] | null> {
-    return await ContactService._userRepository.find(options)
+  async find(options?: FindManyOptions<Contacts>): Promise<Contacts[] | null> {
+    return await this._contactRepository.find(options)
   }
 
-  static async save (data: Partial<Contacts>): Promise<Contacts | null> {
-    if (!data.name) {
-      throw new AppError('Name contact is required', 400)
+  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts | null> {
+    if (!options) {
+      throw new AppError("Options are required", 400)
     }
-
-    if (!data.relationship) {
-      throw new AppError('Relationship is required', 400)
-    }
-
-    return await ContactService._userRepository.save(data)
+    return await this._contactRepository.findOne(options)
   }
 
-  public toString (): string {
-    return 'ContactService'
+  async save(
+    contactId: string,
+    data: Partial<Contacts>
+  ): Promise<Contacts | null> {
+    const contactFound = await this._contactRepository.findOne({
+      where: { id: contactId },
+    })
+
+    if (!contactFound) {
+      throw new AppError("Contact not found", 404)
+    }
+
+    return await this._contactRepository.save({
+      ...contactFound,
+      ...data,
+    })
+  }
+
+  async create(data: Partial<Contacts>): Promise<Contacts | null> {
+    const { name, relationship, profile } = data
+
+    if (!name) {
+      throw new AppError("Name is required", 400)
+    }
+
+    if (!relationship) {
+      throw new AppError("Relationship is required", 400)
+    }
+
+    if (!profile) {
+      throw new AppError("Profile is required", 400)
+    }
+
+    return await this._contactRepository.save(data)
+  }
+
+  async findOrSave(data: Partial<Contacts>): Promise<Contacts> {
+    const { name, profile } = data
+
+    if (!name) {
+      throw new AppError("Name is required", 400)
+    }
+
+    if (!profile) {
+      throw new AppError("Profile is required", 400)
+    }
+
+    const contact = await this._contactRepository.findOne({
+      where: { name, profile },
+    })
+
+    if (!contact) {
+      return await this._contactRepository.save(data)
+    }
+
+    return contact
+  }
+
+  async remove(contactId: string): Promise<Contacts | null> {
+    const contactFound = await this._contactRepository.findOne({
+      where: { id: contactId },
+    })
+
+    if (!contactFound) {
+      throw new AppError("COntact not found", 404)
+    }
+
+    return await this._contactRepository.remove(contactFound)
   }
 }

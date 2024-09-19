@@ -55,12 +55,12 @@ export class UserController {
   }
 
   @Put("/")
-  async userCreate(req, res): Promise<Users> {
+  async userCreate(req: IRequest<Users>, res): Promise<Users> {
     const { body } = req
 
     try {
       return res.status(201).send({
-        user: await this._userService.findOrSave(body as Users),
+        user: await this._userService.findOrSave(body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -75,7 +75,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        user: await this._userService.save(id as string, body),
+        user: await this._userService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -89,7 +89,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        user: await this._userService.remove(id as string),
+        user: await this._userService.remove(id),
       })
     } catch (err) {
       AppLogger.error(err.message)

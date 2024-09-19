@@ -75,7 +75,7 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        profile: await this._profileService.remove(id as string),
+        profile: await this._profileService.remove(id),
       })
     } catch (err) {
       AppLogger.error(err.message)

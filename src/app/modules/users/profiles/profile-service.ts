@@ -19,8 +19,6 @@ export class ProfileService implements IService<Profiles> {
   }
 
   async findOne(options: FindOneOptions<Profiles>): Promise<Profiles | null> {
-    console.log({ options })
-
     if (!options) {
       throw new AppError("Options are required", 400)
     }
