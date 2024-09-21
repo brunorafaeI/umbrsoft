@@ -24,11 +24,8 @@ export class BookingClients {
   })
   email: string
 
-  @Column("character varying", {
-    name: "phone",
-    length: 50,
-  })
-  phone: string
+  @Column("jsonb", { name: "phone", nullable: true })
+  phone: string | null
 
   @Column("timestamp without time zone", {
     name: "created_at",

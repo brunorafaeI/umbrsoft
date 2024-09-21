@@ -69,11 +69,7 @@ export class ProfileService implements IService<Profiles> {
   }
 
   async findOrSave(data: Partial<Profiles>): Promise<Profiles> {
-    const { user, name } = data
-
-    if (!name) {
-      throw new AppError("Name is required", 400)
-    }
+    const { user } = data
 
     if (!user) {
       throw new AppError("User is required", 400)
@@ -84,7 +80,7 @@ export class ProfileService implements IService<Profiles> {
     }
 
     const profile = await this._profileRepository.findOne({
-      where: { name, email: data?.email, user },
+      where: { email: data?.email, user },
     })
 
     if (!profile) {
