@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm"
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm"
 import { Profiles } from "../access/Profiles"
 import { BookingClients } from "./BookingClients"
 import { BookingNotes } from "./BookingNotes"
@@ -19,7 +26,7 @@ export class Bookings {
   @Column("enum", {
     name: "status",
     enum: ["DONE", "CONFIRMED", "PENDING", "CANCELLED"],
-    default: "'PENDING'",
+    default: "PENDING",
   })
   status: "DONE" | "CONFIRMED" | "PENDING" | "CANCELLED"
 
@@ -45,7 +52,7 @@ export class Bookings {
 
   @Column("timestamp without time zone", {
     name: "created_at",
-    default: () => "('now')::date",
+    default: () => "now()",
   })
   createdAt: Date
 

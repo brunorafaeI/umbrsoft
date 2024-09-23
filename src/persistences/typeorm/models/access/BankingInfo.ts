@@ -32,7 +32,7 @@ export class BankingInfo {
 
   @Column("timestamp without time zone", {
     name: "created_at",
-    default: () => "('now')::date",
+    default: () => "now()",
   })
   createdAt: Date
 

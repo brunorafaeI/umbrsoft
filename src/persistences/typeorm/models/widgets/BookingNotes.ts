@@ -14,7 +14,7 @@ export class BookingNotes {
   @Column("enum", {
     name: "status",
     enum: ["OPEN", "CLOSED"],
-    default: "'OPEN'",
+    default: "OPEN",
   })
   status: "OPEN" | "CLOSED"
 
@@ -33,7 +33,7 @@ export class BookingNotes {
 
   @Column("timestamp without time zone", {
     name: "created_at",
-    default: () => "('now')::date",
+    default: () => "now()",
   })
   createdAt: Date
 
