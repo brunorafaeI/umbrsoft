@@ -17,7 +17,7 @@ export class Modules {
   @Column("uuid", {
     primary: true,
     name: "id",
-    default: () => "gen_random_uuid()",
+    generated: "uuid",
   })
   id: string
 
