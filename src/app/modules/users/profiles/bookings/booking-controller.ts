@@ -10,7 +10,7 @@ import { BookingService } from "./booking-service"
 import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
 
 @Controller("/bookings")
-export class ProfileController {
+export class BookingController {
   constructor(
     @Inject(BookingService)
     private readonly _bookingService: IService<Bookings>

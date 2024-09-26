@@ -6,27 +6,27 @@ import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequest } from "@/app/contracts/request-interface"
-import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
-import { BankingInfoService } from "./banking-info-service"
+import { BookingSettingService } from "./booking-setting-service"
+import type { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
 
-@Controller("/bankings")
-export class BankingInfoController {
+@Controller("/booking-setting")
+export class BookingSettingController {
   constructor(
-    @Inject(BankingInfoService)
-    private readonly _bankingService: IService<Bookings>
+    @Inject(BookingSettingService)
+    private readonly _bookingService: IService<BookingSettings>
   ) {}
 
   @Get("/")
   @Post("/")
-  async bankingIndex(
-    req: IRequest<FindManyOptions<Bookings>>,
+  async bookingSettingIndex(
+    req: IRequest<FindManyOptions<BookingSettings>>,
     res
-  ): Promise<Bookings[]> {
+  ): Promise<BookingSettings[]> {
     const { body } = req
 
     try {
       return res.status(200).send({
-        bankings: await this._bankingService.find(body),
+        bookings: await this._bookingService.find(body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -36,8 +36,8 @@ export class BankingInfoController {
 
   @Get("/:id")
   @Post("/:id")
-  async bankingFindOne(
-    req: IRequest<FindOneOptions<Bookings>>,
+  async bookingSettingFindOne(
+    req: IRequest<FindOneOptions<BookingSettings>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
@@ -47,7 +47,7 @@ export class BankingInfoController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        banking: await this._bankingService.findOne(bodyWhere),
+        booking: await this._bookingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -56,13 +56,13 @@ export class BankingInfoController {
   }
 
   @Put("/:id")
-  async bankingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async bookingSettingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        banking: await this._bankingService.save(id, body),
+        booking: await this._bookingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -71,12 +71,12 @@ export class BankingInfoController {
   }
 
   @Delete("/:id")
-  async bankingDelete(req, res): Promise<Profiles> {
+  async bookingSettingDelete(req, res): Promise<Profiles> {
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        banking: await this._bankingService.remove(id as string),
+        booking: await this._bookingService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

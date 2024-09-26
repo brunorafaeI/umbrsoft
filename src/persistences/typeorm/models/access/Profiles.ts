@@ -13,6 +13,7 @@ import { Users } from "./Users"
 import { Modules } from "../crm/Modules"
 import { EventParamHistory } from "./EventParamHistory"
 import { EventTableHistory } from "./EventTableHistory"
+import { BookingSettings } from "../widgets/BookingSettings"
 
 @Index("profiles_pkey", ["id"], { unique: true })
 @Entity("profiles", { schema: "app_access" })
@@ -109,4 +110,7 @@ export class Profiles {
     (eventTableHistory) => eventTableHistory.profile
   )
   eventTableHistories: EventTableHistory[]
+
+  @OneToMany(() => BookingSettings, (bookingSetting) => bookingSetting.profile)
+  bookingSettings: BookingSettings[]
 }
