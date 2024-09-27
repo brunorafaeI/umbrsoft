@@ -5,8 +5,9 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { ProfileService } from "./profile-service"
+import { MAX_LIMIT } from "@/common/utils/contants"
 
 @Controller("/profiles")
 export class ProfileController {
@@ -18,14 +19,31 @@ export class ProfileController {
   @Get("/")
   @Post("/")
   async profileIndex(
-    req: IRequest<FindManyOptions<Profiles>>,
+    req: IRequestBody<FindManyOptions<Profiles>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
+    const page = parseInt(req.query?.page, 10) || 1
+    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
+
+    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
+    const skip = (page - 1) * take
 
     try {
+      const [profiles, total] = await this._profileService.findAndCount({
+        ...body,
+        skip,
+        take,
+      })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        profiles: await this._profileService.find(body),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        profiles,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -36,7 +54,7 @@ export class ProfileController {
   @Get("/:id")
   @Post("/:id")
   async profileFindOne(
-    req: IRequest<FindOneOptions<Profiles>>,
+    req: IRequestBody<FindOneOptions<Profiles>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
@@ -55,7 +73,7 @@ export class ProfileController {
   }
 
   @Put("/:id")
-  async profileUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async profileUpdate(req: IRequestBody<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
@@ -70,7 +88,10 @@ export class ProfileController {
   }
 
   @Delete("/:id")
-  async profileDelete(req: IRequest<{ id: string }>, res): Promise<Profiles> {
+  async profileDelete(
+    req: IRequestBody<{ id: string }>,
+    res
+  ): Promise<Profiles> {
     const { id } = req.params
 
     try {

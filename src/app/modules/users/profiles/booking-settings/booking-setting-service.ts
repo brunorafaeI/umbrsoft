@@ -14,6 +14,36 @@ export class BookingSettingService implements IService<BookingSettings> {
     )
   ) {}
 
+  async create(
+    data: Partial<BookingSettings>
+  ): Promise<BookingSettings | null> {
+    const { profile, content } = data
+
+    if (!profile) {
+      throw new AppError("Profile is required", 400)
+    }
+
+    if (!content) {
+      throw new AppError("Content is required", 400)
+    }
+
+    return await this._bookingSettingRepository.save(data)
+  }
+
+  async save(
+    bookingSettingId: string,
+    data: Partial<BookingSettings>
+  ): Promise<BookingSettings | null> {
+    const bookingFound = await this.findOne({
+      where: { id: bookingSettingId },
+    })
+
+    return await this._bookingSettingRepository.save({
+      ...bookingFound,
+      ...data,
+    })
+  }
+
   async find(
     options?: FindManyOptions<BookingSettings>
   ): Promise<BookingSettings[]> {
@@ -34,36 +64,6 @@ export class BookingSettingService implements IService<BookingSettings> {
     }
 
     return bookingFound
-  }
-
-  async save(
-    bookingId: string,
-    data: Partial<BookingSettings>
-  ): Promise<BookingSettings | null> {
-    const bookingFound = await this.findOne({
-      where: { id: bookingId },
-    })
-
-    return await this._bookingSettingRepository.save({
-      ...bookingFound,
-      ...data,
-    })
-  }
-
-  async create(
-    data: Partial<BookingSettings>
-  ): Promise<BookingSettings | null> {
-    const { profile, content } = data
-
-    if (!profile) {
-      throw new AppError("Profile is required", 400)
-    }
-
-    if (!content) {
-      throw new AppError("Content is required", 400)
-    }
-
-    return await this._bookingSettingRepository.save(data)
   }
 
   async findOrSave(data: Partial<BookingSettings>): Promise<BookingSettings> {
@@ -88,9 +88,15 @@ export class BookingSettingService implements IService<BookingSettings> {
     return booking
   }
 
-  async remove(bookingId: string): Promise<BookingSettings | null> {
+  async findAndCount(
+    options?: FindManyOptions<BookingSettings>
+  ): Promise<[BookingSettings[], number]> {
+    return await this._bookingSettingRepository.findAndCount(options)
+  }
+
+  async remove(bookingSettingId: string): Promise<BookingSettings | null> {
     const bookingFound = await this.findOne({
-      where: { id: bookingId },
+      where: { id: bookingSettingId },
     })
 
     return await this._bookingSettingRepository.remove(bookingFound)

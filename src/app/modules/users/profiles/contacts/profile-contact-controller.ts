@@ -4,7 +4,7 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { ContactService } from "./contact-service"
 import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
@@ -23,7 +23,7 @@ export class ProfileContactController {
   @Get("/:id/contacts")
   @Post("/:id/contacts")
   async profileContactIndex(
-    req: IRequest<FindManyOptions<Contacts>>,
+    req: IRequestBody<FindManyOptions<Contacts>>,
     res
   ): Promise<Contacts> {
     const { body } = req
@@ -46,7 +46,7 @@ export class ProfileContactController {
   }
 
   @Put("/:id/contacts")
-  async profileContactCreate(req: IRequest<Contacts>, res): Promise<Contacts> {
+  async profileContactCreate(req: IRequestBody<Contacts>, res): Promise<Contacts> {
     const { body } = req
     const { id } = req.params
 

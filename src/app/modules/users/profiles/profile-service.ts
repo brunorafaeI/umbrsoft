@@ -14,22 +14,22 @@ export class ProfileService implements IService<Profiles> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<Profiles>): Promise<Profiles[]> {
-    return await this._profileRepository.find(options)
-  }
+  async create(data: Partial<Profiles>): Promise<Profiles | null> {
+    const { user, name, email } = data
 
-  async findOne(options: FindOneOptions<Profiles>): Promise<Profiles> {
-    if (!options) {
-      throw new AppError("Options are required", 400)
+    if (!user) {
+      throw new AppError("User is required", 400)
     }
 
-    const profileFound = await this._profileRepository.findOne(options)
-
-    if (!profileFound) {
-      throw new AppError("Profile not found", 404)
+    if (!name) {
+      throw new AppError("Name is required", 400)
     }
 
-    return profileFound
+    if (!email) {
+      throw new AppError("Email is required", 400)
+    }
+
+    return await this._profileRepository.save(data)
   }
 
   async save(
@@ -50,22 +50,22 @@ export class ProfileService implements IService<Profiles> {
     })
   }
 
-  async create(data: Partial<Profiles>): Promise<Profiles | null> {
-    const { user, name, email } = data
+  async find(options?: FindManyOptions<Profiles>): Promise<Profiles[]> {
+    return await this._profileRepository.find(options)
+  }
 
-    if (!user) {
-      throw new AppError("User is required", 400)
+  async findOne(options: FindOneOptions<Profiles>): Promise<Profiles> {
+    if (!options) {
+      throw new AppError("Options are required", 400)
     }
 
-    if (!name) {
-      throw new AppError("Name is required", 400)
+    const profileFound = await this._profileRepository.findOne(options)
+
+    if (!profileFound) {
+      throw new AppError("Profile not found", 404)
     }
 
-    if (!email) {
-      throw new AppError("Email is required", 400)
-    }
-
-    return await this._profileRepository.save(data)
+    return profileFound
   }
 
   async findOrSave(data: Partial<Profiles>): Promise<Profiles> {
@@ -88,6 +88,12 @@ export class ProfileService implements IService<Profiles> {
     }
 
     return profile
+  }
+
+  async findAndCount(
+    options?: FindManyOptions<Profiles>
+  ): Promise<[Profiles[], number]> {
+    return await this._profileRepository.findAndCount(options)
   }
 
   async remove(profileId: string): Promise<Profiles | null> {

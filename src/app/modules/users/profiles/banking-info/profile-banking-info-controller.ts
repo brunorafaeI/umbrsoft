@@ -4,7 +4,7 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { ProfileService } from "../profile-service"
 import { BankingInfoService } from "./banking-info-service"
 import { type BankingInfo } from "@/persistences/typeorm/models/access/BankingInfo"
@@ -23,7 +23,7 @@ export class ProfileBankingInfoController {
   @Get("/:id/banking-info")
   @Post("/:id/banking-info")
   async profileBankingIndex(
-    req: IRequest<FindManyOptions<BankingInfo>>,
+    req: IRequestBody<FindManyOptions<BankingInfo>>,
     res
   ): Promise<BankingInfo> {
     const { body } = req
@@ -46,7 +46,7 @@ export class ProfileBankingInfoController {
   }
 
   @Put("/:id/banking-info")
-  async profileBankingCreate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async profileBankingCreate(req: IRequestBody<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 

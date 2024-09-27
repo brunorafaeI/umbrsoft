@@ -20,22 +20,16 @@ export class UserService implements IService<Users> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<Users>): Promise<Users[]> {
-    return await this._userRepository.find(options)
-  }
+  async create(data: Partial<Users>): Promise<Users | null> {
+    const userFound = await this._userRepository.findOne({
+      where: { username: data.username },
+    })
 
-  async findOne(options: FindOneOptions<Users>): Promise<Users> {
-    if (!options) {
-      throw new AppError("Options are required", 400)
+    if (userFound) {
+      throw new AppError("User already exists", 400)
     }
 
-    const userFound = await this._userRepository.findOne(options)
-
-    if (!userFound) {
-      throw new AppError("User not found", 404)
-    }
-
-    return userFound
+    return await this._userRepository.save(data)
   }
 
   async save(userId: string, data: Partial<Users>): Promise<Users | null> {
@@ -53,16 +47,22 @@ export class UserService implements IService<Users> {
     })
   }
 
-  async create(data: Partial<Users>): Promise<Users | null> {
-    const userFound = await this._userRepository.findOne({
-      where: { username: data.username },
-    })
+  async find(options?: FindManyOptions<Users>): Promise<Users[]> {
+    return await this._userRepository.find(options)
+  }
 
-    if (userFound) {
-      throw new AppError("User already exists", 400)
+  async findOne(options: FindOneOptions<Users>): Promise<Users> {
+    if (!options) {
+      throw new AppError("Options are required", 400)
     }
 
-    return await this._userRepository.save(data)
+    const userFound = await this._userRepository.findOne(options)
+
+    if (!userFound) {
+      throw new AppError("User not found", 404)
+    }
+
+    return userFound
   }
 
   async findOrSave(data: Partial<Users>): Promise<Users> {
@@ -94,6 +94,12 @@ export class UserService implements IService<Users> {
     }
 
     return user
+  }
+
+  async findAndCount(
+    options?: FindManyOptions<Users>
+  ): Promise<[Users[], number]> {
+    return await this._userRepository.findAndCount(options)
   }
 
   async remove(id: string): Promise<Users | null> {

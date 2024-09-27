@@ -5,8 +5,9 @@ import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { UserService } from "./user-service"
+import { MAX_LIMIT } from "@/common/utils/contants"
 
 @Controller("/users")
 export class UserController {
@@ -18,16 +19,34 @@ export class UserController {
   @Post("/")
   @Get("/")
   async userIndex(
-    req: IRequest<FindManyOptions<Users>>,
+    req: IRequestBody<FindManyOptions<Users>>,
     res
   ): Promise<Users[]> {
     const { body } = req
+    const page = parseInt(req.query?.page, 10) || 1
+    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
+
+    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
+    const skip = (page - 1) * take
 
     try {
+      const [users, total] = await this._userService.findAndCount({
+        ...body,
+        skip,
+        take,
+      })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        users: await this._userService.find(body),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        users,
       })
     } catch (err) {
+      console.log(err)
       AppLogger.error(err.message)
       throw new AppError("Internal Server Error", 500)
     }
@@ -36,7 +55,7 @@ export class UserController {
   @Post("/:id")
   @Get("/:id")
   async userFindOne(
-    req: IRequest<FindOneOptions<Users>>,
+    req: IRequestBody<FindOneOptions<Users>>,
     res
   ): Promise<Users[]> {
     const { body } = req
@@ -55,7 +74,7 @@ export class UserController {
   }
 
   @Put("/")
-  async userCreate(req: IRequest<Users>, res): Promise<Users> {
+  async userCreate(req: IRequestBody<Users>, res): Promise<Users> {
     const { body } = req
 
     try {
@@ -69,7 +88,7 @@ export class UserController {
   }
 
   @Put("/:id")
-  async userUpdate(req: IRequest<Users>, res): Promise<Users> {
+  async userUpdate(req: IRequestBody<Users>, res): Promise<Users> {
     const { body } = req
     const { id } = req.params
 
@@ -84,7 +103,7 @@ export class UserController {
   }
 
   @Delete("/:id")
-  async userDelete(req: IRequest<{ id: string }>, res): Promise<Users> {
+  async userDelete(req: IRequestBody<{ id: string }>, res): Promise<Users> {
     const { id } = req.params
 
     try {

@@ -5,9 +5,10 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { BookingService } from "./booking-service"
 import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
+import { MAX_LIMIT } from "@/common/utils/contants"
 
 @Controller("/bookings")
 export class BookingController {
@@ -19,14 +20,31 @@ export class BookingController {
   @Get("/")
   @Post("/")
   async bookingIndex(
-    req: IRequest<FindManyOptions<Bookings>>,
+    req: IRequestBody<FindManyOptions<Bookings>>,
     res
   ): Promise<Bookings[]> {
     const { body } = req
+    const page = parseInt(req.query?.page, 10) || 1
+    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
+
+    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
+    const skip = (page - 1) * take
 
     try {
+      const [bookings, total] = await this._bookingService.findAndCount({
+        ...body,
+        skip,
+        take,
+      })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        bookings: await this._bookingService.find(body),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        bookings,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -37,7 +55,7 @@ export class BookingController {
   @Get("/:id")
   @Post("/:id")
   async bookingFindOne(
-    req: IRequest<FindOneOptions<Bookings>>,
+    req: IRequestBody<FindOneOptions<Bookings>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
@@ -56,7 +74,7 @@ export class BookingController {
   }
 
   @Put("/:id")
-  async bookingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async bookingUpdate(req: IRequestBody<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 

@@ -5,28 +5,47 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { BookingSettingService } from "./booking-setting-service"
 import type { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
+import { MAX_LIMIT } from "@/common/utils/contants"
 
 @Controller("/booking-setting")
 export class BookingSettingController {
   constructor(
     @Inject(BookingSettingService)
-    private readonly _bookingService: IService<BookingSettings>
+    private readonly _bookingSettingService: IService<BookingSettings>
   ) {}
 
   @Get("/")
   @Post("/")
   async bookingSettingIndex(
-    req: IRequest<FindManyOptions<BookingSettings>>,
+    req: IRequestBody<FindManyOptions<BookingSettings>>,
     res
   ): Promise<BookingSettings[]> {
     const { body } = req
+    const page = parseInt(req.query?.page, 10) || 1
+    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
+
+    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
+    const skip = (page - 1) * take
 
     try {
+      const [bookingSettings, total] =
+        await this._bookingSettingService.findAndCount({
+          ...body,
+          skip,
+          take,
+        })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        bookings: await this._bookingService.find(body),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        bookingSettings,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -37,7 +56,7 @@ export class BookingSettingController {
   @Get("/:id")
   @Post("/:id")
   async bookingSettingFindOne(
-    req: IRequest<FindOneOptions<BookingSettings>>,
+    req: IRequestBody<FindOneOptions<BookingSettings>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
@@ -47,7 +66,7 @@ export class BookingSettingController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        booking: await this._bookingService.findOne(bodyWhere),
+        bookingSetting: await this._bookingSettingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -56,13 +75,16 @@ export class BookingSettingController {
   }
 
   @Put("/:id")
-  async bookingSettingUpdate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async bookingSettingUpdate(
+    req: IRequestBody<Profiles>,
+    res
+  ): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        booking: await this._bookingService.save(id, body),
+        bookingSetting: await this._bookingSettingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -76,7 +98,7 @@ export class BookingSettingController {
 
     try {
       return res.status(200).send({
-        booking: await this._bookingService.remove(id as string),
+        bookingSetting: await this._bookingSettingService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

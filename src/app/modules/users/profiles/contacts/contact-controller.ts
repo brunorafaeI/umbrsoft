@@ -6,7 +6,8 @@ import { AppError } from "@/common/helpers/http"
 import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
+import { MAX_LIMIT } from "@/common/utils/contants"
 
 @Controller("/contacts")
 export class ContactController {
@@ -18,14 +19,31 @@ export class ContactController {
   @Get("/")
   @Post("/")
   async contactIndex(
-    req: IRequest<FindManyOptions<Contacts>>,
+    req: IRequestBody<FindManyOptions<Contacts>>,
     res
   ): Promise<Contacts[]> {
     const { body } = req
+    const page = parseInt(req.query?.page, 10) || 1
+    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
+
+    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
+    const skip = (page - 1) * take
 
     try {
+      const [contacts, total] = await this._contactService.findAndCount({
+        ...body,
+        skip,
+        take,
+      })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        contacts: await this._contactService.find(body),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        contacts,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -36,7 +54,7 @@ export class ContactController {
   @Get("/:id")
   @Post("/:id")
   async contactFindOne(
-    req: IRequest<FindOneOptions<Contacts>>,
+    req: IRequestBody<FindOneOptions<Contacts>>,
     res
   ): Promise<Contacts[]> {
     const { body } = req
@@ -55,7 +73,7 @@ export class ContactController {
   }
 
   @Put("/:id")
-  async contactUpdate(req: IRequest<Contacts>, res): Promise<Contacts> {
+  async contactUpdate(req: IRequestBody<Contacts>, res): Promise<Contacts> {
     const { body } = req
     const { id } = req.params
 
@@ -70,7 +88,10 @@ export class ContactController {
   }
 
   @Delete("/:id")
-  async contactDelete(req: IRequest<{ id: string }>, res): Promise<Contacts> {
+  async contactDelete(
+    req: IRequestBody<{ id: string }>,
+    res
+  ): Promise<Contacts> {
     const { id } = req.params
 
     try {

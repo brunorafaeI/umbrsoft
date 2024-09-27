@@ -4,7 +4,7 @@ import { AppError } from "@/common/helpers/http"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { UserService } from "../user-service"
 import { ProfileService } from "./profile-service"
@@ -23,7 +23,7 @@ export class UserProfileController {
   @Get("/:id/profiles")
   @Post("/:id/profiles")
   async userProfileIndex(
-    req: IRequest<FindManyOptions<Profiles>>,
+    req: IRequestBody<FindManyOptions<Profiles>>,
     res
   ): Promise<Profiles> {
     const { body } = req
@@ -46,7 +46,7 @@ export class UserProfileController {
   }
 
   @Put("/:id/profiles")
-  async userProfileCreate(req: IRequest<Profiles>, res): Promise<Profiles> {
+  async userProfileCreate(req: IRequestBody<Profiles>, res): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 

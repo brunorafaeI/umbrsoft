@@ -14,38 +14,6 @@ export class ContactService implements IService<Contacts> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<Contacts>): Promise<Contacts[]> {
-    return await this._contactRepository.find(options)
-  }
-
-  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts> {
-    if (!options) {
-      throw new AppError("Options are required", 400)
-    }
-
-    const contactFound = await this._contactRepository.findOne(options)
-
-    if (!contactFound) {
-      throw new AppError("Contact not found", 404)
-    }
-
-    return contactFound
-  }
-
-  async save(
-    contactId: string,
-    data: Partial<Contacts>
-  ): Promise<Contacts | null> {
-    const contactFound = await this.findOne({
-      where: { id: contactId },
-    })
-
-    return await this._contactRepository.save({
-      ...contactFound,
-      ...data,
-    })
-  }
-
   async create(data: Partial<Contacts>): Promise<Contacts | null> {
     const { name, relationship, profile } = data
 
@@ -62,6 +30,38 @@ export class ContactService implements IService<Contacts> {
     }
 
     return await this._contactRepository.save(data)
+  }
+
+  async save(
+    contactId: string,
+    data: Partial<Contacts>
+  ): Promise<Contacts | null> {
+    const contactFound = await this.findOne({
+      where: { id: contactId },
+    })
+
+    return await this._contactRepository.save({
+      ...contactFound,
+      ...data,
+    })
+  }
+
+  async find(options?: FindManyOptions<Contacts>): Promise<Contacts[]> {
+    return await this._contactRepository.find(options)
+  }
+
+  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts> {
+    if (!options) {
+      throw new AppError("Options are required", 400)
+    }
+
+    const contactFound = await this._contactRepository.findOne(options)
+
+    if (!contactFound) {
+      throw new AppError("Contact not found", 404)
+    }
+
+    return contactFound
   }
 
   async findOrSave(data: Partial<Contacts>): Promise<Contacts> {
@@ -84,6 +84,12 @@ export class ContactService implements IService<Contacts> {
     }
 
     return contact
+  }
+
+  async findAndCount(
+    options?: FindManyOptions<Contacts>
+  ): Promise<[Contacts[], number]> {
+    return await this._contactRepository.findAndCount(options)
   }
 
   async remove(contactId: string): Promise<Contacts | null> {

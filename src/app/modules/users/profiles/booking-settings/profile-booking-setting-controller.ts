@@ -4,7 +4,7 @@ import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
-import { IRequest } from "@/app/contracts/request-interface"
+import { IRequestBody } from "@/app/contracts/request-interface"
 import { type FindManyOptions } from "typeorm"
 import { ProfileService } from "../profile-service"
 import { BookingSettingService } from "./booking-setting-service"
@@ -23,7 +23,7 @@ export class ProfileBookingSettingController {
   @Get("/:id/booking-setting")
   @Post("/:id/booking-setting")
   async profileBookingSettingIndex(
-    req: IRequest<FindManyOptions<BookingSettings>>,
+    req: IRequestBody<FindManyOptions<BookingSettings>>,
     res
   ): Promise<BookingSettings> {
     const { body } = req
@@ -47,7 +47,7 @@ export class ProfileBookingSettingController {
 
   @Put("/:id/booking-setting")
   async profileBookingSettingCreate(
-    req: IRequest<Profiles>,
+    req: IRequestBody<Profiles>,
     res
   ): Promise<Profiles> {
     const { body } = req

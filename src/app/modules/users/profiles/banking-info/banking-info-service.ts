@@ -14,22 +14,18 @@ export class BankingInfoService implements IService<BankingInfo> {
     )
   ) {}
 
-  async find(options?: FindManyOptions<BankingInfo>): Promise<BankingInfo[]> {
-    return await this._bankingInfoRepository.find(options)
-  }
+  async create(data: Partial<BankingInfo>): Promise<BankingInfo | null> {
+    const { profile, accountNumber } = data
 
-  async findOne(options: FindOneOptions<BankingInfo>): Promise<BankingInfo> {
-    if (!options) {
-      throw new AppError("Options are required", 400)
+    if (!profile) {
+      throw new AppError("Profile is required", 400)
     }
 
-    const bankingInfoFound = await this._bankingInfoRepository.findOne(options)
-
-    if (!bankingInfoFound) {
-      throw new AppError("Booking not found", 404)
+    if (!accountNumber) {
+      throw new AppError("AccountNumber is required", 400)
     }
 
-    return bankingInfoFound
+    return await this._bankingInfoRepository.save(data)
   }
 
   async save(
@@ -46,18 +42,22 @@ export class BankingInfoService implements IService<BankingInfo> {
     })
   }
 
-  async create(data: Partial<BankingInfo>): Promise<BankingInfo | null> {
-    const { profile, accountNumber } = data
+  async find(options?: FindManyOptions<BankingInfo>): Promise<BankingInfo[]> {
+    return await this._bankingInfoRepository.find(options)
+  }
 
-    if (!profile) {
-      throw new AppError("Profile is required", 400)
+  async findOne(options: FindOneOptions<BankingInfo>): Promise<BankingInfo> {
+    if (!options) {
+      throw new AppError("Options are required", 400)
     }
 
-    if (!accountNumber) {
-      throw new AppError("AccountNumber is required", 400)
+    const bankingInfoFound = await this._bankingInfoRepository.findOne(options)
+
+    if (!bankingInfoFound) {
+      throw new AppError("Booking not found", 404)
     }
 
-    return await this._bankingInfoRepository.save(data)
+    return bankingInfoFound
   }
 
   async findOrSave(data: Partial<BankingInfo>): Promise<BankingInfo> {
@@ -80,6 +80,12 @@ export class BankingInfoService implements IService<BankingInfo> {
     }
 
     return bankingInfo
+  }
+
+  async findAndCount(
+    options?: FindManyOptions<BankingInfo>
+  ): Promise<[BankingInfo[], number]> {
+    return await this._bankingInfoRepository.findAndCount(options)
   }
 
   async remove(bankingId: string): Promise<BankingInfo | null> {
