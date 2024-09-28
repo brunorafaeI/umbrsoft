@@ -8,7 +8,7 @@ import { IService } from "@/app/contracts"
 import { IRequestBody } from "@/app/contracts/request-interface"
 import { BookingSettingService } from "./booking-setting-service"
 import type { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
-import { MAX_LIMIT } from "@/common/utils/contants"
+import { RequestUtil } from "@/common/utils/request"
 
 @Controller("/booking-setting")
 export class BookingSettingController {
@@ -24,11 +24,7 @@ export class BookingSettingController {
     res
   ): Promise<BookingSettings[]> {
     const { body } = req
-    const page = parseInt(req.query?.page, 10) || 1
-    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
-
-    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
-    const skip = (page - 1) * take
+    const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
 
     try {
       const [bookingSettings, total] =

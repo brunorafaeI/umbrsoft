@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { type TGetEnvReturn } from "./types"
-import StringUtil from "@/common/utils/string"
+import { StringUtil } from "@/common/utils/string"
 
 export function getEnvRaw(env: string, fallback?: any): TGetEnvReturn {
   const envVar = process.env[env] ?? fallback

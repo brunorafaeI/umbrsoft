@@ -1,4 +1,4 @@
-import StringUtil from "@/common/utils/string"
+import { StringUtil } from "@/common/utils/string"
 
 describe("StringUtil toBoolean", () => {
   test("should return true for boolean value", () => {

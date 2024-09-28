@@ -7,7 +7,7 @@ import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequestBody } from "@/app/contracts/request-interface"
 import { UserService } from "./user-service"
-import { MAX_LIMIT } from "@/common/utils/contants"
+import { RequestUtil } from "@/common/utils/request"
 
 @Controller("/users")
 export class UserController {
@@ -23,11 +23,7 @@ export class UserController {
     res
   ): Promise<Users[]> {
     const { body } = req
-    const page = parseInt(req.query?.page, 10) || 1
-    const limit = parseInt(req.query?.limit, 10) || MAX_LIMIT
-
-    const take = limit > MAX_LIMIT ? MAX_LIMIT : limit
-    const skip = (page - 1) * take
+    const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
 
     try {
       const [users, total] = await this._userService.findAndCount({
