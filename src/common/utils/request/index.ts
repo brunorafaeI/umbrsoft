@@ -1,4 +1,4 @@
-import { MAX_LIMIT } from "../contants"
+import { MAX_LIMIT } from "../constants"
 
 export const RequestUtil = {
   parseQueryPagination: (query: { page?: string, limit?: string }) => {
