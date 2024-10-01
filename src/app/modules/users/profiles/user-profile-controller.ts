@@ -37,7 +37,7 @@ export class UserProfileController {
       const bodyWhere = { ...body, where: { ...body?.where, user } }
 
       return res.status(200).send({
-        profiles: await this._profileService.find(bodyWhere),
+        data: await this._profileService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -56,7 +56,7 @@ export class UserProfileController {
       })
 
       return res.status(201).send({
-        profile: await this._profileService.findOrSave({
+        data: await this._profileService.findOrSave({
           ...body,
           user,
         }),

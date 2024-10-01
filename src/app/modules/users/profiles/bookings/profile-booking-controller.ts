@@ -9,6 +9,7 @@ import { ProfileService } from "../profile-service"
 import { BookingService } from "./booking-service"
 import { type Bookings } from "@/persistences/typeorm/models/widgets/Bookings"
 import { type FindManyOptions } from "typeorm"
+import { RequestUtil } from "@/common/utils/request"
 
 @Controller("/profiles")
 export class ProfileBookingController {
@@ -28,6 +29,7 @@ export class ProfileBookingController {
   ): Promise<Bookings> {
     const { body } = req
     const { id } = req.params
+    const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
 
     try {
       const profile = await this._profileService.findOne({
@@ -36,8 +38,20 @@ export class ProfileBookingController {
 
       const bodyWhere = { ...body, where: { ...body?.where, profile } }
 
+      const [bookings, total] = await this._bookingService.findAndCount({
+        ...bodyWhere,
+        skip,
+        take,
+      })
+
+      const totalPages = Math.ceil(total / take)
+
       return res.status(200).send({
-        bookings: await this._bookingService.find(bodyWhere),
+        totalPages,
+        currentPage: page,
+        itemsPerPage: take,
+        totalItems: total,
+        data: bookings,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -59,7 +73,7 @@ export class ProfileBookingController {
       })
 
       return res.status(201).send({
-        booking: await this._bookingService.findOrSave({
+        data: await this._bookingService.findOrSave({
           ...body,
           profile,
         }),

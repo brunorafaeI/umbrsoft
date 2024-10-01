@@ -40,7 +40,7 @@ export class BankingInfoController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        bankingInfos,
+        data: bankingInfos,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -61,7 +61,7 @@ export class BankingInfoController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        bankingInfo: await this._bankingService.findOne(bodyWhere),
+        data: await this._bankingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -76,7 +76,7 @@ export class BankingInfoController {
 
     try {
       return res.status(200).send({
-        bankingInfo: await this._bankingService.save(id, body),
+        data: await this._bankingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -90,7 +90,7 @@ export class BankingInfoController {
 
     try {
       return res.status(200).send({
-        bankingInfo: await this._bankingService.remove(id as string),
+        data: await this._bankingService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

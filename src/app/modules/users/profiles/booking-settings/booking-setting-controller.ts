@@ -41,7 +41,7 @@ export class BookingSettingController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        bookingSettings,
+        data: bookingSettings,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -62,7 +62,7 @@ export class BookingSettingController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        bookingSetting: await this._bookingSettingService.findOne(bodyWhere),
+        data: await this._bookingSettingService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -80,7 +80,7 @@ export class BookingSettingController {
 
     try {
       return res.status(200).send({
-        bookingSetting: await this._bookingSettingService.save(id, body),
+        data: await this._bookingSettingService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -94,7 +94,7 @@ export class BookingSettingController {
 
     try {
       return res.status(200).send({
-        bookingSetting: await this._bookingSettingService.remove(id as string),
+        data: await this._bookingSettingService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

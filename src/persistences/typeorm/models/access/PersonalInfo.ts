@@ -24,13 +24,13 @@ export class PersonalInfo {
   @Column("uuid", { name: "coordinate_id", nullable: true })
   coordinateId: string | null
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @ManyToOne(() => Profiles, (profiles) => profiles.personalInfos, {

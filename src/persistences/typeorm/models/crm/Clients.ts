@@ -33,13 +33,13 @@ export class Clients {
   @Column("enum", { name: "type", nullable: true, enum: ["STANDARD", "PRO"] })
   type: "STANDARD" | "PRO" | null
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @ManyToOne(() => Coordinates, (coordinates) => coordinates.clients, {

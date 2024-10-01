@@ -39,7 +39,7 @@ export class UserController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        users,
+        data: users,
       })
     } catch (err) {
       console.log(err)
@@ -61,7 +61,7 @@ export class UserController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        user: await this._userService.findOne(bodyWhere),
+        data: await this._userService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -75,7 +75,7 @@ export class UserController {
 
     try {
       return res.status(201).send({
-        user: await this._userService.findOrSave(body),
+        data: await this._userService.findOrSave(body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -90,7 +90,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        user: await this._userService.save(id, body),
+        data: await this._userService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -104,7 +104,7 @@ export class UserController {
 
     try {
       return res.status(200).send({
-        user: await this._userService.remove(id),
+        data: await this._userService.remove(id),
       })
     } catch (err) {
       AppLogger.error(err.message)

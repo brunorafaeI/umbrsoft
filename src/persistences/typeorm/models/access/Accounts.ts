@@ -33,7 +33,7 @@ export class Accounts {
   @Column("text", { name: "id_token", nullable: true })
   idToken: string | null
 
-  @Column("timestamp without time zone", { name: "expires_at" })
+  @Column("timestamp with time zone", { name: "expires_at" })
   expiresAt: Date
 
   @Column("character varying", {
@@ -46,13 +46,13 @@ export class Accounts {
   @Column("text", { name: "scope", nullable: true })
   scope: string | null
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @ManyToOne(() => Users, (users) => users.accounts, {

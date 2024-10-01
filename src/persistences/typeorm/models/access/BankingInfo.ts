@@ -30,13 +30,13 @@ export class BankingInfo {
   @Column("character varying", { name: "bic", nullable: true, length: 30 })
   bic: string | null
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @ManyToOne(() => Profiles, (profiles) => profiles.bankingInfos, {

@@ -18,7 +18,7 @@ export class BookingNotes {
   })
   status: "OPEN" | "CLOSED"
 
-  @Column("timestamp without time zone", { name: "scheduled_at" })
+  @Column("timestamp with time zone", { name: "scheduled_at" })
   scheduledAt: Date
 
   @Column("jsonb", { name: "attachments", nullable: true })
@@ -31,12 +31,12 @@ export class BookingNotes {
   @JoinColumn([{ name: "booking_id", referencedColumnName: "id" }])
   booking: Bookings
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 }

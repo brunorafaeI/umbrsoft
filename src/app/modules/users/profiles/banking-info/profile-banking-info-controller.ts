@@ -37,7 +37,7 @@ export class ProfileBankingInfoController {
       const bodyWhere = { where: body?.where, profile }
 
       return res.status(200).send({
-        bankings: await this._bankingInfoService.find(bodyWhere),
+        data: await this._bankingInfoService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -56,7 +56,7 @@ export class ProfileBankingInfoController {
       })
 
       return res.status(201).send({
-        banking: await this._bankingInfoService.findOrSave({
+        data: await this._bankingInfoService.findOrSave({
           ...body,
           profile,
         }),

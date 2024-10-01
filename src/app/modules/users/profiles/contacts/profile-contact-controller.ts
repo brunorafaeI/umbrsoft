@@ -37,7 +37,7 @@ export class ProfileContactController {
       const bodyWhere = { ...body, where: { ...body?.where, profile } }
 
       return res.status(200).send({
-        contacts: await this._contactService.find(bodyWhere),
+        data: await this._contactService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -60,7 +60,7 @@ export class ProfileContactController {
       }
 
       return res.status(201).send({
-        contact: await this._contactService.findOrSave({
+        data: await this._contactService.findOrSave({
           ...body,
           profile,
         }),

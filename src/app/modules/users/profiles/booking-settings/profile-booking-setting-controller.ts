@@ -17,7 +17,7 @@ export class ProfileBookingSettingController {
     private readonly _profileService: IService<Profiles>,
 
     @Inject(BookingSettingService)
-    private readonly _bookingService: IService<BookingSettings>
+    private readonly _bookingSettingService: IService<BookingSettings>
   ) {}
 
   @Get("/:id/booking-setting")
@@ -37,7 +37,7 @@ export class ProfileBookingSettingController {
       const bodyWhere = { ...body, where: { ...body?.where, profile } }
 
       return res.status(200).send({
-        bookings: await this._bookingService.find(bodyWhere),
+        data: await this._bookingSettingService.find(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -59,7 +59,7 @@ export class ProfileBookingSettingController {
       })
 
       return res.status(201).send({
-        booking: await this._bookingService.findOrSave({
+        data: await this._bookingSettingService.findOrSave({
           ...body,
           profile,
         }),

@@ -18,19 +18,19 @@ export class Sessions {
   })
   sessionToken: string | null
 
-  @Column("timestamp without time zone", { name: "expires", nullable: true })
+  @Column("timestamp with time zone", { name: "expires", nullable: true })
   expires: Date | null
 
-  @Column("timestamp without time zone", { name: "duration", nullable: true })
+  @Column("timestamp with time zone", { name: "duration", nullable: true })
   duration: Date | null
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @ManyToOne(() => Users, (users) => users.sessions, {

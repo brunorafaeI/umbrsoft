@@ -39,7 +39,7 @@ export class ContactController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        contacts,
+        data: contacts,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -60,7 +60,7 @@ export class ContactController {
       const bodyWhere = { ...body, where: { ...body?.where, id: contactId } }
 
       return res.status(200).send({
-        contact: await this._contactService.findOne(bodyWhere),
+        data: await this._contactService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -75,7 +75,7 @@ export class ContactController {
 
     try {
       return res.status(200).send({
-        contact: await this._contactService.save(id, body),
+        data: await this._contactService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -92,7 +92,7 @@ export class ContactController {
 
     try {
       return res.status(200).send({
-        contact: await this._contactService.remove(id),
+        data: await this._contactService.remove(id),
       })
     } catch (err) {
       AppLogger.error(err.message)

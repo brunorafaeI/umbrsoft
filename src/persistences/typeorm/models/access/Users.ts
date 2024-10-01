@@ -27,13 +27,13 @@ export class Users {
   @Column("text", { name: "access_token" })
   accessToken: string
 
-  @Column("timestamp without time zone", {
+  @Column("timestamp with time zone", {
     name: "created_at",
     default: () => "now()",
   })
   createdAt: Date
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
 
   @OneToMany(() => Accounts, (accounts) => accounts.user)

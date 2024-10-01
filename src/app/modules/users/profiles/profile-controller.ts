@@ -39,7 +39,7 @@ export class ProfileController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        profiles,
+        data: profiles,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -60,7 +60,7 @@ export class ProfileController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        profile: await this._profileService.findOne(bodyWhere),
+        data: await this._profileService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -75,7 +75,7 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        profile: await this._profileService.save(id, body),
+        data: await this._profileService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -92,7 +92,7 @@ export class ProfileController {
 
     try {
       return res.status(200).send({
-        profile: await this._profileService.remove(id),
+        data: await this._profileService.remove(id),
       })
     } catch (err) {
       AppLogger.error(err.message)
