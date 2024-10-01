@@ -31,6 +31,7 @@ export class ProfileBankingInfoController {
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 
@@ -46,12 +47,16 @@ export class ProfileBankingInfoController {
   }
 
   @Put("/:id/banking-info")
-  async profileBankingCreate(req: IRequestBody<Profiles>, res): Promise<Profiles> {
+  async profileBankingCreate(
+    req: IRequestBody<Profiles>,
+    res
+  ): Promise<Profiles> {
     const { body } = req
     const { id } = req.params
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 

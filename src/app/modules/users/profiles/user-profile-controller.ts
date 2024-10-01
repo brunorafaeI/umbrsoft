@@ -31,6 +31,7 @@ export class UserProfileController {
 
     try {
       const user = await this._userService.findOne({
+        select: ["id"],
         where: { id },
       })
 
@@ -52,6 +53,7 @@ export class UserProfileController {
 
     try {
       const user = await this._userService.findOne({
+        select: ["id"],
         where: { id },
       })
 

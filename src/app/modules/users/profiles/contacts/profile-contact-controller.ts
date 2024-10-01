@@ -31,6 +31,7 @@ export class ProfileContactController {
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 
@@ -52,6 +53,7 @@ export class ProfileContactController {
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 

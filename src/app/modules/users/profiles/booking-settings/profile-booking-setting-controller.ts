@@ -31,6 +31,7 @@ export class ProfileBookingSettingController {
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 
@@ -55,6 +56,7 @@ export class ProfileBookingSettingController {
 
     try {
       const profile = await this._profileService.findOne({
+        select: ["id"],
         where: { id },
       })
 
