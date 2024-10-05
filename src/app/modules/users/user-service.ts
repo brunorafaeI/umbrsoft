@@ -7,14 +7,13 @@ import { AppError } from "@/common/helpers/http"
 import crypto from "node:crypto"
 import { Inject, Injectable } from "@/common/decorators/injectable"
 import type { IService } from "@/app/contracts/service-interface"
-import { IJwtService } from "@/app/contracts"
-import { JwtToken } from "@/app/externals/jwt-service"
+import { JwtToken, IJwtTokenService } from "@/app/externals/jwt-token-service"
 
 @Injectable()
 export class UserService implements IService<Users> {
   constructor(
     @Inject(JwtToken)
-    private readonly _jwtToken: IJwtService,
+    private readonly _jwtToken: IJwtTokenService,
     private readonly _userRepository: Repository<Users> = entityManager.getRepository(
       Users
     )

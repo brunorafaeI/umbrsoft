@@ -5,8 +5,7 @@ import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
 import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
 import { Inject } from "@/common/decorators/injectable"
-import { IService } from "@/app/contracts"
-import { IRequestBody } from "@/app/contracts/request-interface"
+import { IService, IRequestBody } from "@/app/contracts"
 import { RequestUtil } from "@/common/utils/request"
 
 @Controller("/contacts")
