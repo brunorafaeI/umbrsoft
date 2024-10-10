@@ -1,5 +1,6 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm"
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm"
 import { Profiles } from "../access/Profiles"
+import { BookingSpecialDays } from "./BookingSpecialDays"
 
 @Index("booking_settings_pkey", ["id"], { unique: true })
 @Entity("booking_settings", { schema: "app_widgets" })
@@ -29,4 +30,7 @@ export class BookingSettings {
 
   @Column("timestamp with time zone", { name: "updated_at", nullable: true })
   updatedAt: Date | null
+
+  @OneToMany(() => BookingSpecialDays, (specialDays) => specialDays.bookingSetting)
+  specialDays: BookingSpecialDays[]
 }
