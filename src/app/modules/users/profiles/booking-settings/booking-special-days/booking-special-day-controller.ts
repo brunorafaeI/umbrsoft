@@ -2,33 +2,33 @@ import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
-import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
+import { type Profiles } from "@/persistences/typeorm/models/access"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequestBody } from "@/app/contracts/request-interface"
-import { BookingSettingService } from "./booking-setting-service"
-import type { BookingSettings } from "@/persistences/typeorm/models/widgets"
+import type { BookingSpecialDays } from "@/persistences/typeorm/models/widgets"
 import { RequestUtil } from "@/common/utils/request"
+import { BookingSpecialDayService } from "./booking-special-day-service"
 
-@Controller("/booking-setting")
-export class BookingSettingController {
+@Controller("/booking-special-day")
+export class BookingSpecialDayController {
   constructor(
-    @Inject(BookingSettingService)
-    private readonly _bookingSettingService: IService<BookingSettings>
+    @Inject(BookingSpecialDayService)
+    private readonly _bookingSpecialDayService: IService<BookingSpecialDays>
   ) {}
 
   @Get("/")
   @Post("/")
-  async bookingSettingIndex(
-    req: IRequestBody<FindManyOptions<BookingSettings>>,
+  async bookingSpecialDayIndex(
+    req: IRequestBody<FindManyOptions<BookingSpecialDays>>,
     res
-  ): Promise<BookingSettings[]> {
+  ): Promise<BookingSpecialDays[]> {
     const { body } = req
     const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
 
     try {
-      const [bookingSettings, total] =
-        await this._bookingSettingService.findAndCount({
+      const [bookingSpecialDays, total] =
+        await this._bookingSpecialDayService.findAndCount({
           ...body,
           skip,
           take,
@@ -41,7 +41,7 @@ export class BookingSettingController {
         currentPage: page,
         itemsPerPage: take,
         totalItems: total,
-        data: bookingSettings,
+        data: bookingSpecialDays,
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -51,8 +51,8 @@ export class BookingSettingController {
 
   @Get("/:id")
   @Post("/:id")
-  async bookingSettingFindOne(
-    req: IRequestBody<FindOneOptions<BookingSettings>>,
+  async bookingSpecialDayFindOne(
+    req: IRequestBody<FindOneOptions<BookingSpecialDays>>,
     res
   ): Promise<Profiles[]> {
     const { body } = req
@@ -62,7 +62,7 @@ export class BookingSettingController {
       const bodyWhere = { ...body, where: { ...body?.where, id } }
 
       return res.status(200).send({
-        data: await this._bookingSettingService.findOne(bodyWhere),
+        data: await this._bookingSpecialDayService.findOne(bodyWhere),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -71,7 +71,7 @@ export class BookingSettingController {
   }
 
   @Put("/:id")
-  async bookingSettingUpdate(
+  async bookingSpecialDayUpdate(
     req: IRequestBody<Profiles>,
     res
   ): Promise<Profiles> {
@@ -80,7 +80,7 @@ export class BookingSettingController {
 
     try {
       return res.status(200).send({
-        data: await this._bookingSettingService.save(id, body),
+        data: await this._bookingSpecialDayService.save(id, body),
       })
     } catch (err) {
       AppLogger.error(err.message)
@@ -89,12 +89,12 @@ export class BookingSettingController {
   }
 
   @Delete("/:id")
-  async bookingSettingDelete(req, res): Promise<Profiles> {
+  async bookingSpecialDayDelete(req, res): Promise<Profiles> {
     const { id } = req.params
 
     try {
       return res.status(200).send({
-        data: await this._bookingSettingService.remove(id as string),
+        data: await this._bookingSpecialDayService.remove(id as string),
       })
     } catch (err) {
       AppLogger.error(err.message)

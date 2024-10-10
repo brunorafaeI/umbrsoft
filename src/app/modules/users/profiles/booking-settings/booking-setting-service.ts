@@ -1,7 +1,7 @@
 import { Repository } from "typeorm"
 import type { FindManyOptions, FindOneOptions } from "typeorm"
 import { entityManager } from "@/persistences/typeorm"
-import { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
+import { BookingSettings } from "@/persistences/typeorm/models/widgets"
 import { AppError } from "@/common/helpers/http"
 import { type IService } from "@/app/contracts"
 import { Injectable } from "@/common/decorators/injectable"

@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Put } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
 import { AppError } from "@/common/helpers/http"
-import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
+import { type Profiles } from "@/persistences/typeorm/models/access"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequestBody } from "@/app/contracts/request-interface"
 import { type FindManyOptions } from "typeorm"
 import { ProfileService } from "../profile-service"
 import { BookingSettingService } from "./booking-setting-service"
-import type { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
+import type { BookingSettings } from "@/persistences/typeorm/models/widgets"
 
 @Controller("/profiles")
 export class ProfileBookingSettingController {
@@ -48,9 +48,9 @@ export class ProfileBookingSettingController {
 
   @Put("/:id/booking-setting")
   async profileBookingSettingCreate(
-    req: IRequestBody<Profiles>,
+    req: IRequestBody<BookingSettings>,
     res
-  ): Promise<Profiles> {
+  ): Promise<BookingSettings> {
     const { body } = req
     const { id } = req.params
 
