@@ -13,7 +13,7 @@ import type {
 import { BookingSpecialDayService } from "./booking-special-day-service"
 
 @Controller("/booking-settings")
-export class ProfileBookingSettingController {
+export class BookingSettingSpecialDayController {
   constructor(
     @Inject(BookingSettingService)
     private readonly _bookingSettingService: IService<BookingSettings>,
