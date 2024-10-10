@@ -7,6 +7,7 @@ import { Inject } from "@/common/decorators/injectable"
 import { IService, IRequestBody } from "@/app/contracts"
 import { UserService } from "./user-service"
 import { RequestUtil } from "@/common/utils/request"
+import { getClientConnection } from "@/persistences/typeorm/tenants/connections"
 
 @Controller("/users")
 export class UserController {
@@ -23,6 +24,9 @@ export class UserController {
   ): Promise<Users[]> {
     const { body } = req
     const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
+
+    const result = await getClientConnection("EtWmGLWA")
+    console.log({ result })
 
     try {
       const [users, total] = await this._userService.findAndCount({
