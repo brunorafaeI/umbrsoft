@@ -1,6 +1,5 @@
 import { Controller, Put, Post, Get, Delete } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { Inject } from "@/common/decorators/injectable"
@@ -42,9 +41,8 @@ export class UserController {
         data: users,
       })
     } catch (err) {
-      console.log(err)
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -65,7 +63,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -79,7 +77,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -94,7 +92,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -108,7 +106,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

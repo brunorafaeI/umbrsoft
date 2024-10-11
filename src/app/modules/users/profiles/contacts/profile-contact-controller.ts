@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Put } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
@@ -42,7 +41,7 @@ export class ProfileContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -57,10 +56,6 @@ export class ProfileContactController {
         where: { id },
       })
 
-      if (!profile) {
-        throw new AppError("Profile not found", 404)
-      }
-
       return res.status(201).send({
         data: await this._contactService.findOrSave({
           ...body,
@@ -69,7 +64,7 @@ export class ProfileContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

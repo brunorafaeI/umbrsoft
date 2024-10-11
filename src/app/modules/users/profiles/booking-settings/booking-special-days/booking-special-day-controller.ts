@@ -1,7 +1,6 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
@@ -45,7 +44,7 @@ export class BookingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -66,7 +65,7 @@ export class BookingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -84,7 +83,7 @@ export class BookingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -98,7 +97,7 @@ export class BookingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

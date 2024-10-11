@@ -2,7 +2,6 @@ import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import { ContactService } from "./contact-service"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Contacts } from "@/persistences/typeorm/models/access/Contacts"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
@@ -43,7 +42,7 @@ export class ContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -64,7 +63,7 @@ export class ContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -79,7 +78,7 @@ export class ContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -96,7 +95,7 @@ export class ContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

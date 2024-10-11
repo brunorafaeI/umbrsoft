@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Put } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { Inject } from "@/common/decorators/injectable"
 import { IService } from "@/app/contracts"
 import { IRequestBody } from "@/app/contracts/request-interface"
@@ -44,7 +43,7 @@ export class BookingSettingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -70,7 +69,7 @@ export class BookingSettingSpecialDayController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }
