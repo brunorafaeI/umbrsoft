@@ -1,7 +1,6 @@
 import { Controller, Delete, Get, Post, Put } from "@/common/decorators/route"
 import type { FindOneOptions, FindManyOptions } from "typeorm"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
 import { Inject } from "@/common/decorators/injectable"
 import { IService, IRequestBody } from "@/app/contracts"
@@ -42,7 +41,7 @@ export class ProfileController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -56,14 +55,15 @@ export class ProfileController {
     const { id } = req.params
 
     try {
-      const bodyWhere = { ...body, where: { ...body?.where, id } }
-
       return res.status(200).send({
-        data: await this._profileService.findOne(bodyWhere),
+        data: await this._profileService.findOne({
+          ...body,
+          where: { ...body?.where, id },
+        }),
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -78,7 +78,7 @@ export class ProfileController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -95,7 +95,7 @@ export class ProfileController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

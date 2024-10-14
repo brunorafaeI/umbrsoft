@@ -54,18 +54,12 @@ export class ProfileService implements IService<Profiles> {
     return await this._profileRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Profiles>): Promise<Profiles> {
+  async findOne(options: FindOneOptions<Profiles>): Promise<Profiles | null> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    const profileFound = await this._profileRepository.findOne(options)
-
-    if (!profileFound) {
-      throw new AppError("Profile not found", 404)
-    }
-
-    return profileFound
+    return await this._profileRepository.findOne(options)
   }
 
   async findOrSave(data: Partial<Profiles>): Promise<Profiles> {

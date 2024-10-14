@@ -7,13 +7,17 @@ import { AppError } from "@/common/helpers/http"
 import crypto from "node:crypto"
 import { Inject, Injectable } from "@/common/decorators/injectable"
 import type { IService } from "@/app/contracts/service-interface"
-import { JwtToken, IJwtTokenService } from "@/app/externals/jwt-token-service"
+import {
+  IJwtTokenService,
+  JwtTokenService,
+} from "@/app/externals/jwt-token-service"
 
 @Injectable()
 export class UserService implements IService<Users> {
   constructor(
-    @Inject(JwtToken)
+    @Inject(JwtTokenService)
     private readonly _jwtToken: IJwtTokenService,
+
     private readonly _userRepository: Repository<Users> = entityManager.getRepository(
       Users
     )
@@ -50,18 +54,12 @@ export class UserService implements IService<Users> {
     return await this._userRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Users>): Promise<Users> {
+  async findOne(options: FindOneOptions<Users>): Promise<Users | null> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    const userFound = await this._userRepository.findOne(options)
-
-    if (!userFound) {
-      throw new AppError("User not found", 404)
-    }
-
-    return userFound
+    return await this._userRepository.findOne(options)
   }
 
   async findOrSave(data: Partial<Users>): Promise<Users> {

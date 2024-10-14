@@ -36,10 +36,13 @@ export class ProfileBookingController {
         where: { id },
       })
 
-      const bodyWhere = { ...body, where: { ...body?.where, profile } }
+      if (!profile) {
+        throw new AppError("Profile not found", 404)
+      }
 
       const [bookings, total] = await this._bookingService.findAndCount({
-        ...bodyWhere,
+        ...body,
+        where: { ...body?.where, profile },
         skip,
         take,
       })
@@ -55,7 +58,7 @@ export class ProfileBookingController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -73,6 +76,10 @@ export class ProfileBookingController {
         where: { id },
       })
 
+      if (!profile) {
+        throw new AppError("Profile not found", 404)
+      }
+
       return res.status(201).send({
         data: await this._bookingService.findOrSave({
           ...body,
@@ -81,7 +88,7 @@ export class ProfileBookingController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

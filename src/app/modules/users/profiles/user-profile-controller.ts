@@ -34,14 +34,19 @@ export class UserProfileController {
         where: { id },
       })
 
-      const bodyWhere = { ...body, where: { ...body?.where, user } }
+      if (!user) {
+        throw new AppError("User not found", 404)
+      }
 
       return res.status(200).send({
-        data: await this._profileService.find(bodyWhere),
+        data: await this._profileService.find({
+          ...body,
+          where: { ...body?.where, user },
+        }),
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -56,6 +61,10 @@ export class UserProfileController {
         where: { id },
       })
 
+      if (!user) {
+        throw new AppError("User not found", 404)
+      }
+
       return res.status(201).send({
         data: await this._profileService.findOrSave({
           ...body,
@@ -64,7 +73,7 @@ export class UserProfileController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

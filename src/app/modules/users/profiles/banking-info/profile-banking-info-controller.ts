@@ -47,9 +47,9 @@ export class ProfileBankingInfoController {
 
   @Put("/:id/banking-info")
   async profileBankingCreate(
-    req: IRequestBody<Profiles>,
+    req: IRequestBody<BankingInfo>,
     res
-  ): Promise<Profiles> {
+  ): Promise<BankingInfo> {
     const { body } = req
     const { id } = req.params
 
@@ -59,6 +59,10 @@ export class ProfileBankingInfoController {
         where: { id },
       })
 
+      if (!profile) {
+        throw new AppError("Profile not found", 404)
+      }
+
       return res.status(201).send({
         data: await this._bankingInfoService.findOrSave({
           ...body,
@@ -67,7 +71,7 @@ export class ProfileBankingInfoController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

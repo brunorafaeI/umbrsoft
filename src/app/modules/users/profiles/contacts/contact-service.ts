@@ -50,18 +50,12 @@ export class ContactService implements IService<Contacts> {
     return await this._contactRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts> {
+  async findOne(options: FindOneOptions<Contacts>): Promise<Contacts | null> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    const contactFound = await this._contactRepository.findOne(options)
-
-    if (!contactFound) {
-      throw new AppError("Contact not found", 404)
-    }
-
-    return contactFound
+    return await this._contactRepository.findOne(options)
   }
 
   async findOrSave(data: Partial<Contacts>): Promise<Contacts> {
@@ -96,6 +90,10 @@ export class ContactService implements IService<Contacts> {
     const contactFound = await this.findOne({
       where: { id: contactId },
     })
+
+    if (!contactFound) {
+      throw new AppError("Contact not found", 404)
+    }
 
     return await this._contactRepository.remove(contactFound)
   }

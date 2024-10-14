@@ -34,14 +34,19 @@ export class ProfileContactController {
         where: { id },
       })
 
-      const bodyWhere = { ...body, where: { ...body?.where, profile } }
+      if (!profile) {
+        throw new AppError("Profile not found", 404)
+      }
 
       return res.status(200).send({
-        data: await this._contactService.find(bodyWhere),
+        data: await this._contactService.find({
+          ...body,
+          where: { ...body?.where, profile },
+        }),
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -71,7 +76,7 @@ export class ProfileContactController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }

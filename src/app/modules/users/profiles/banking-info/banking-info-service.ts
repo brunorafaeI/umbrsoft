@@ -46,18 +46,14 @@ export class BankingInfoService implements IService<BankingInfo> {
     return await this._bankingInfoRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<BankingInfo>): Promise<BankingInfo> {
+  async findOne(
+    options: FindOneOptions<BankingInfo>
+  ): Promise<BankingInfo | null> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    const bankingInfoFound = await this._bankingInfoRepository.findOne(options)
-
-    if (!bankingInfoFound) {
-      throw new AppError("Booking not found", 404)
-    }
-
-    return bankingInfoFound
+    return await this._bankingInfoRepository.findOne(options)
   }
 
   async findOrSave(data: Partial<BankingInfo>): Promise<BankingInfo> {
@@ -92,6 +88,10 @@ export class BankingInfoService implements IService<BankingInfo> {
     const bankingInfoFound = await this.findOne({
       where: { id: bankingId },
     })
+
+    if (!bankingInfoFound) {
+      throw new AppError("Banking info not found", 404)
+    }
 
     return await this._bankingInfoRepository.remove(bankingInfoFound)
   }

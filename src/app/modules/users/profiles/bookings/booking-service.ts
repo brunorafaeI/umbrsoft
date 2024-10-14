@@ -46,18 +46,12 @@ export class BookingService implements IService<Bookings> {
     return await this._bookingRepository.find(options)
   }
 
-  async findOne(options: FindOneOptions<Bookings>): Promise<Bookings> {
+  async findOne(options: FindOneOptions<Bookings>): Promise<Bookings | null> {
     if (!options) {
       throw new AppError("Options are required", 400)
     }
 
-    const bookingFound = await this._bookingRepository.findOne(options)
-
-    if (!bookingFound) {
-      throw new AppError("Booking not found", 404)
-    }
-
-    return bookingFound
+    return await this._bookingRepository.findOne(options)
   }
 
   async findOrSave(data: Partial<Bookings>): Promise<Bookings> {
@@ -92,6 +86,10 @@ export class BookingService implements IService<Bookings> {
     const bookingFound = await this.findOne({
       where: { id: bookingId },
     })
+
+    if (!bookingFound) {
+      throw new AppError("Booking not found", 404)
+    }
 
     return await this._bookingRepository.remove(bookingFound)
   }

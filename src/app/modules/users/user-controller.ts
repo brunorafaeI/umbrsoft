@@ -1,13 +1,11 @@
 import { Controller, Put, Post, Get, Delete } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { type FindOneOptions, type FindManyOptions } from "typeorm"
 import { Inject } from "@/common/decorators/injectable"
 import { IService, IRequestBody } from "@/app/contracts"
 import { UserService } from "./user-service"
 import { RequestUtil } from "@/common/utils/request"
-import { getClientConnection } from "@/persistences/typeorm/tenants/connections"
 
 @Controller("/users")
 export class UserController {
@@ -24,9 +22,6 @@ export class UserController {
   ): Promise<Users[]> {
     const { body } = req
     const { take, skip, page } = RequestUtil.parseQueryPagination(req.query)
-
-    const result = await getClientConnection("EtWmGLWA")
-    console.log({ result })
 
     try {
       const [users, total] = await this._userService.findAndCount({
@@ -47,7 +42,7 @@ export class UserController {
     } catch (err) {
       console.log(err)
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -61,14 +56,15 @@ export class UserController {
     const { id } = req.params
 
     try {
-      const bodyWhere = { ...body, where: { ...body?.where, id } }
-
       return res.status(200).send({
-        data: await this._userService.findOne(bodyWhere),
+        data: await this._userService.findOne({
+          ...body,
+          where: { ...body?.where, id },
+        }),
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -82,7 +78,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -97,7 +93,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
@@ -111,7 +107,7 @@ export class UserController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }
