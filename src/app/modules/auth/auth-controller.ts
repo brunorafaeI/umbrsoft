@@ -1,17 +1,26 @@
 import { IRequestBody, IService } from "@/app/contracts"
-import { IJwtTokenService, JwtToken } from "@/app/externals/jwt-token-service"
+import {
+  IJwtTokenService,
+  JwtTokenService,
+} from "@/app/externals/jwt-token-service"
 import { Inject } from "@/common/decorators/injectable"
 import { Controller, Post } from "@/common/decorators/route"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { UserService } from "../users/user-service"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
+import {
+  GoogleAuthService,
+  IGoogleAuthService,
+} from "@/app/externals/google-auth-service"
 
 @Controller("/auth")
 export class AuthController {
   constructor(
-    @Inject(JwtToken)
+    @Inject(JwtTokenService)
     private readonly _jwtToken: IJwtTokenService,
+
+    @Inject(GoogleAuthService)
+    private readonly _googleAuth: IGoogleAuthService,
 
     @Inject(UserService)
     private readonly _userService: IService<Users>
@@ -19,9 +28,9 @@ export class AuthController {
 
   @Post("/login")
   async authLogin(
-    req: IRequestBody<{ username: string, password: string }>,
+    req: IRequestBody<{ username: string; password: string }>,
     res
-  ): Promise<any> {
+  ) {
     const { username } = req.body
 
     try {
@@ -29,15 +38,33 @@ export class AuthController {
       return res.status(200).send({ accessToken: jwtToken })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
   @Post("/google")
-  async authGoogle(
-    req: IRequestBody<{ credentials: Record<string, string> }>,
-    res
-  ): Promise<any> {
-    return res.status(200).send({ body: req.body })
+  async authGoogle(req: IRequestBody<{ idToken: string }>, res) {
+    const { idToken } = req.body
+
+    try {
+      const userInfo = await this._googleAuth.getTokenInfo(idToken)
+      const userFound = await this._userService.findOrSave({
+        username: userInfo.email,
+      })
+
+      const jwtToken = await this._jwtToken.sign({
+        ...userInfo,
+        id: userFound.id,
+      })
+
+      const user = await this._userService.save(userFound.id, {
+        accessToken: jwtToken,
+      })
+
+      return res.status(200).send({ data: user })
+    } catch (err) {
+      AppLogger.error(err.message)
+      return err
+    }
   }
 }

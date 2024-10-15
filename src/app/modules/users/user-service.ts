@@ -5,19 +5,12 @@ import { Users } from "@/persistences/typeorm/models/access/Users"
 import { AppError } from "@/common/helpers/http"
 
 import crypto from "node:crypto"
-import { Inject, Injectable } from "@/common/decorators/injectable"
+import { Injectable } from "@/common/decorators/injectable"
 import type { IService } from "@/app/contracts/service-interface"
-import {
-  IJwtTokenService,
-  JwtTokenService,
-} from "@/app/externals/jwt-token-service"
 
 @Injectable()
 export class UserService implements IService<Users> {
   constructor(
-    @Inject(JwtTokenService)
-    private readonly _jwtToken: IJwtTokenService,
-
     private readonly _userRepository: Repository<Users> = entityManager.getRepository(
       Users
     )
@@ -32,7 +25,10 @@ export class UserService implements IService<Users> {
       throw new AppError("User already exists", 400)
     }
 
-    return await this._userRepository.save(data)
+    const userCreated = await this._userRepository.save(data)
+
+    delete userCreated.password
+    return userCreated
   }
 
   async save(userId: string, data: Partial<Users>): Promise<Users | null> {
@@ -44,10 +40,13 @@ export class UserService implements IService<Users> {
       throw new AppError("User not found", 404)
     }
 
-    return await this._userRepository.save({
+    const userSaved = await this._userRepository.save({
       ...userFound,
       ...data,
     })
+
+    delete userSaved.password
+    return userSaved
   }
 
   async find(options?: FindManyOptions<Users>): Promise<Users[]> {
@@ -74,23 +73,18 @@ export class UserService implements IService<Users> {
       relations: ["profiles"],
     })
 
-    if (!user) {
-      const accessToken = await this._jwtToken.sign({ username })
-
-      if (password) {
-        data.password = crypto
-          .createHash("sha256")
-          .update(password)
-          .digest("hex")
-      }
-
-      return await this._userRepository.save({
-        ...data,
-        accessToken,
-      })
+    if (user) {
+      return user
     }
 
-    return user
+    if (password) {
+      data.password = crypto.createHash("sha256").update(password).digest("hex")
+    }
+
+    const userSaved = await this._userRepository.save(data)
+
+    delete userSaved.password
+    return userSaved
   }
 
   async findAndCount(

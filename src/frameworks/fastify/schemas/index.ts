@@ -35,7 +35,7 @@ appFastify.post(
       },
     },
   },
-  async (req, res) => {
+  async (req) => {
     return req.body
   }
 )

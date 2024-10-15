@@ -22,7 +22,7 @@ export class Users {
   username: string
 
   @Column("text", { name: "password", nullable: true, select: false })
-  password: string | null
+  password?: string | null
 
   @Column("text", { name: "access_token" })
   accessToken: string

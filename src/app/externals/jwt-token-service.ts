@@ -1,20 +1,21 @@
 import { Injectable } from "@/common/decorators/injectable"
-import { type CredentailsType, jwtToken } from "@/common/libs/jwt"
+import { type CredentialsType, jwtToken } from "@/common/libs/jwt"
+import type { JWTPayload } from "jose"
 
 export interface IJwtTokenService {
-  sign: (credentials: CredentailsType) => Promise<string>
-  verify: (token: string) => Promise<any>
+  sign: (credentials: CredentialsType) => Promise<string>
+  verify: (token: string) => Promise<JWTPayload>
 }
 
 @Injectable()
-export class JwtToken implements IJwtTokenService {
+export class JwtTokenService implements IJwtTokenService {
   constructor(private readonly _jwtToken = jwtToken) {}
 
-  async sign(credentials: CredentailsType): Promise<string> {
+  async sign(credentials: CredentialsType): Promise<string> {
     return await this._jwtToken.encode(credentials)
   }
 
-  async verify(token: string): Promise<any> {
+  async verify(token: string): Promise<JWTPayload> {
     return await this._jwtToken.decode(token)
   }
 }

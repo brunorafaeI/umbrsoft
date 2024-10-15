@@ -1,31 +1,46 @@
 import { jwtVerify, SignJWT, type JWTPayload } from "jose"
 import { getEnv } from "../dotenv/getenv"
+import { SystemLogger } from "../log4js"
+import { AppError } from "@/common/helpers/http"
 
-export const jwtSecret = getEnv("JWT_SECRET")
+const JWT_SECRET = getEnv("JWT_SECRET")
+const JWT_ISSUER = getEnv("JWT_ISSUER")
 
-export type CredentailsType = JWTPayload & {
-  username?: string
-  password?: string
+export type CredentialsType = JWTPayload & {
+  id?: string
+  name?: string
+  email?: string
+  picture?: string
 }
 
 export interface IJwtToken {
-  encode: (credentails: CredentailsType) => Promise<string>
+  encode: (credentails: CredentialsType) => Promise<string>
   decode: (token: string) => Promise<JWTPayload>
 }
 
 export const jwtToken: IJwtToken = {
-  encode: async (credentails: CredentailsType) => {
-    return await new SignJWT(credentails)
+  encode: async (credentails: CredentialsType) => {
+    return await new SignJWT({
+      ...credentails,
+      iat: Math.floor(Date.now() / 1000),
+    })
+      .setExpirationTime("10h")
       .setProtectedHeader({ alg: "HS256" })
-      .sign(new TextEncoder().encode(jwtSecret))
+      .setIssuer(JWT_ISSUER)
+      .sign(new TextEncoder().encode(JWT_SECRET))
   },
 
   decode: async (token: string) => {
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(jwtSecret),
-      { algorithms: ["HS256"] }
-    )
-    return payload
+    try {
+      const { payload } = await jwtVerify(
+        token,
+        new TextEncoder().encode(JWT_SECRET),
+        { algorithms: ["HS256"] }
+      )
+      return payload
+    } catch (err) {
+      SystemLogger.error(err)
+      throw new AppError("Invalid token or expired", 401)
+    }
   },
 }
