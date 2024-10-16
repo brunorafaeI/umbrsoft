@@ -57,11 +57,11 @@ export class AuthController {
         id: userFound.id,
       })
 
-      const user = await this._userService.save(userFound.id, {
+      await this._userService.save(userFound.id, {
         accessToken: jwtToken,
       })
 
-      return res.status(200).send({ data: user })
+      return res.status(200).send({ data: jwtToken })
     } catch (err) {
       AppLogger.error(err.message)
       return err

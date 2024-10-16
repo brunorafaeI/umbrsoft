@@ -39,7 +39,7 @@ export const jwtToken: IJwtToken = {
       )
       return payload
     } catch (err) {
-      SystemLogger.error(err)
+      SystemLogger.error(err.message)
       throw new AppError("Invalid token or expired", 401)
     }
   },
