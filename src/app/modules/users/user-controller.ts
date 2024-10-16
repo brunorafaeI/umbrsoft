@@ -40,7 +40,6 @@ export class UserController {
         data: users,
       })
     } catch (err) {
-      console.log(err)
       AppLogger.error(err.message)
       return err
     }

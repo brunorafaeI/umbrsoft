@@ -1,6 +1,5 @@
 import { Controller, Put, Post, Get } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
 import { type Users } from "@/persistences/typeorm/models/access/Users"
 import { Inject } from "@/common/decorators/injectable"
 import { IService, IRequestBody } from "@/app/contracts"

@@ -1,13 +1,12 @@
 import { Controller, Get, Post, Put } from "@/common/decorators/route"
 import { AppLogger } from "@/common/libs/log4js"
-import { AppError } from "@/common/helpers/http"
-import { type Profiles } from "@/persistences/typeorm/models/access/Profiles"
+import { type Profiles } from "@/persistences/typeorm/models/access"
 import { Inject } from "@/common/decorators/injectable"
 import { IService, IRequestBody } from "@/app/contracts"
 import { type FindManyOptions } from "typeorm"
 import { ProfileService } from "../profile-service"
 import { BookingSettingService } from "./booking-setting-service"
-import type { BookingSettings } from "@/persistences/typeorm/models/widgets/BookingSettings"
+import type { BookingSettings } from "@/persistences/typeorm/models/widgets"
 
 @Controller("/profiles")
 export class ProfileBookingSettingController {
@@ -41,15 +40,15 @@ export class ProfileBookingSettingController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 
   @Put("/:id/booking-setting")
   async profileBookingSettingCreate(
-    req: IRequestBody<Profiles>,
+    req: IRequestBody<BookingSettings>,
     res
-  ): Promise<Profiles> {
+  ): Promise<BookingSettings> {
     const { body } = req
     const { id } = req.params
 
@@ -67,7 +66,7 @@ export class ProfileBookingSettingController {
       })
     } catch (err) {
       AppLogger.error(err.message)
-      throw new AppError("Internal Server Error", 500)
+      return err
     }
   }
 }
